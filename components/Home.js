@@ -3,16 +3,18 @@ import { StyleSheet, Text, View, Button, StatusBar } from 'react-native';
 
 
 
-export  const HomeScreen = ({ navigation }) => {
+export  const HomeScreen = () => {
     return (
+    
         <View style={styles.container}>
         <Text>Home Screen</Text>
         <Button
             title="Go to Details"
-            onPress={() => navigation.navigate('Details')}
+            
         />
         <StatusBar style="auto" />
         </View>
+       
     );
     }
 

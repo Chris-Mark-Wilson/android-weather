@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-export const DetailsScreen=({navigation})=> {
+export const DetailsScreen=()=> {
     return (
       <View style={styles.container}>
         <Text>Details Screen</Text>

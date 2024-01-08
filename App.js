@@ -1,23 +1,29 @@
 import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import { HomeScreen } from "./components/Home";
 import { DetailsScreen } from "./components/Details";
+import { useWindowDimensions, View } from "react-native";
+import { TabView, SceneMap } from "react-native-tab-view";
 
-const Stack = createNativeStackNavigator();
+const renderScene = SceneMap({
+  home: HomeScreen,
+  details: DetailsScreen,
+});
 
 export default function App() {
+  const layout = useWindowDimensions();
+
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: "home", title: "First" },
+    { key: "details", title: "Second" },
+  ]);
   return (
-    <>
-        {/* <View>
-      <Text> what is goin on !</Text>
-    </View> */}
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Details" component={DetailsScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
-    </>
+    <TabView
+      navigationState={{ index, routes }}
+      renderScene={renderScene}
+      onIndexChange={setIndex}
+      initialLayout={{ width: layout.width }}
+    />
   );
 }
