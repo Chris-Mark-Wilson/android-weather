@@ -51,6 +51,7 @@ useEffect(() => {
             <Text>Cloud cover: {variables.cloud_cover}</Text>
             <Text>Wind speed: {variables.wind_speed_10m}</Text>
             <Text>Wind direction: {variables.wind_direction_10m}</Text>
+            <Text>Weather code: {variables.weather_code}</Text>
           </View>
           <View style={styles.details}>
       <Details/>
