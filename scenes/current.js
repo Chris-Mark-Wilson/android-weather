@@ -1,11 +1,15 @@
 import React, { useContext, useEffect,useState } from 'react';
-import { StyleSheet, Text, View, StatusBar } from 'react-native';
+import { ImageBackground,StyleSheet, Text, View, StatusBar } from 'react-native';
 import { Details } from './components/detailsGraph';
 import { LocationFinder } from './components/locationFinder';
 import { LocationContext } from '../contexts/locationContext';
 import { getCurrentWeather } from '../weather-api';
+import { getWeatherDescription } from '../functions/getWeatherDescription';
 
 export  const Current = () => {
+  const [icon,setIcon]=useState(false);
+  const [description,setDescription]=useState("");
+
   const [variables,SetVariables]=useState({
     time:0,
     interval:0,
@@ -34,6 +38,18 @@ useEffect(() => {
   }
 }, [location]);
 
+useEffect(()=>{
+  if(variables.weather_code!=0){
+const weatherDescription=getWeatherDescription(variables.weather_code,variables.is_day);
+
+setIcon(()=>{
+  const newIcon=require(`../assets/weather-icons/SVG/${weatherDescription[0]}.svg`);
+  return newIcon}
+  );
+setDescription(weatherDescription[1]);
+  }
+},[variables])
+
 
 
     return (
@@ -42,7 +58,9 @@ useEffect(() => {
        
           <LocationFinder/>
          
-          <View style={styles.currentWeather}>  
+          <View style={styles.currentWeather}> 
+          {icon&&
+          <ImageBackground source={{uri:`../assets/weather-icons/SVG/${icon}.svg`}} style={{flex:1,width: '100%', height: '100%'}}> 
             <Text>Current Weather</Text>
             <Text>Temperature: {variables.temperature_2m}</Text>
             <Text>Humidity: {variables.relative_humidity_2m}</Text>
@@ -52,6 +70,8 @@ useEffect(() => {
             <Text>Wind speed: {variables.wind_speed_10m}</Text>
             <Text>Wind direction: {variables.wind_direction_10m}</Text>
             <Text>Weather code: {variables.weather_code}</Text>
+            <Text>{icon}</Text>
+            </ImageBackground>}
           </View>
           <View style={styles.details}>
       <Details/>
@@ -82,8 +102,8 @@ useEffect(() => {
           borderRadius: 10,
         },
         currentWeather: {
-          flex:0.65,
-          backgroundColor:"cyan",
+          flex:0.6,
+          // backgroundColor:"skyblue",
          alignItems: 'center',
           justifyContent: 'center',
           width:"100%",
