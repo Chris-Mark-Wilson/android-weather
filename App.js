@@ -7,6 +7,7 @@ import { LocationProvider } from "./contexts/locationContext";
 
 import { useWindowDimensions, View,Text } from "react-native";
 import { TabView, TabBar, SceneMap } from "react-native-tab-view";
+import { CurrentProvider, SevenDaysProvider, TomorrowProvider } from "./contexts/weatherContext";
 
 const renderScene = SceneMap({
   current: Current,
@@ -25,6 +26,9 @@ export default function App() {
   ]);
   return (
     <LocationProvider>
+      <CurrentProvider>
+        <TomorrowProvider>
+          <SevenDaysProvider>
     <TabView
     renderTabBar={props => (
       <View style={{backgroundColor:"lightblue"}}>
@@ -47,6 +51,9 @@ export default function App() {
   style={{backgroundColor:"lightblue",margin :5,padding:0, borderRadius:10}}
 
     />
+      </SevenDaysProvider>
+      </TomorrowProvider>
+      </CurrentProvider>
     </LocationProvider>
   );
 }

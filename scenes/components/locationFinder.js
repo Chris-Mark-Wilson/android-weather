@@ -10,15 +10,15 @@ export const LocationFinder = ({ setTravelType }) => {
 const {location,setLocation}=useContext(LocationContext);
 
   function setNewLocation(details){
-  
+  // on select from dropdown
     console.log(details.geometry.location)
-    // setLocation((oldData)=>{
-    //   const newData=JSON.parse(JSON.stringify(oldData))
-    //   newData.location.end.lat = details.geometry.location.lat
-    //   newData.location.end.long = details.geometry.location.lng
-    //   return newData
-    // })
+    console.log(location)
+    setLocation({
+      lat:details.geometry.location.lat,
+      long:details.geometry.location.lng
+    })
   }
+  
 
   return (
     <>
