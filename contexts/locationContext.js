@@ -5,7 +5,7 @@ export const LocationContext = createContext();
 export const LocationProvider = ({children}) => {
     const [location,setLocation] = useState({
   lat:0,
-  long:0
+  lon:0
     }
 )
 

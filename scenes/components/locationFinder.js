@@ -11,11 +11,10 @@ const {location,setLocation}=useContext(LocationContext);
 
   function setNewLocation(details){
   // on select from dropdown
-    console.log(details.geometry.location)
-    console.log(location)
+  
     setLocation({
       lat:details.geometry.location.lat,
-      long:details.geometry.location.lng
+      lon:details.geometry.location.lng
     })
   }
   

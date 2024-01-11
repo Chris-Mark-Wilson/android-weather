@@ -1,11 +1,41 @@
-import React from 'react';
-import { StyleSheet, Text, View, Button, StatusBar } from 'react-native';
+import React, { useContext, useEffect,useState } from 'react';
+import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import { Details } from './components/detailsGraph';
 import { LocationFinder } from './components/locationFinder';
-
-
+import { LocationContext } from '../contexts/locationContext';
+import { getCurrentWeather } from '../weather-api';
 
 export  const Current = () => {
+  const [variables,SetVariables]=useState({
+    time:0,
+    interval:0,
+    temperature_2m:0,
+    relative_humidity_2m:0,
+    apparent_temperature:0,
+    is_day:0,
+    precipitation:0,
+    rain:0,
+    showers:0,
+    snowfall:0,
+    weather_code:0,
+    cloud_cover:0,
+  });
+
+const {location}=useContext(LocationContext);
+useEffect(() => {
+  if(location.long!=0 && location.lat!=0){
+    console.log(location);
+    getCurrentWeather(location)
+    .then((data)=>{
+      console.log(data)
+      SetVariables(data.current)
+    })
+
+  }
+}, [location]);
+
+
+
     return (
     
         <View style={styles.container}>
@@ -14,6 +44,13 @@ export  const Current = () => {
          
           <View style={styles.currentWeather}>  
             <Text>Current Weather</Text>
+            <Text>Temperature: {variables.temperature_2m}</Text>
+            <Text>Humidity: {variables.relative_humidity_2m}</Text>
+            <Text>Real feel: {variables.apparent_temperature}</Text>
+            <Text>Rain: {variables.rain}</Text>
+            <Text>Cloud cover: {variables.cloud_cover}</Text>
+            <Text>Wind speed: {variables.wind_speed_10m}</Text>
+            <Text>Wind direction: {variables.wind_direction_10m}</Text>
           </View>
           <View style={styles.details}>
       <Details/>
