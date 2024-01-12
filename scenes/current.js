@@ -5,6 +5,7 @@ import { LocationFinder } from './components/locationFinder';
 import { LocationContext } from '../contexts/locationContext';
 import { getCurrentWeather } from '../weather-api';
 import { getWeatherDescription } from '../functions/getWeatherDescription';
+import * as icons from '../assets/weather-icons/SVG';
 
 export  const Current = () => {
   const [icon,setIcon]=useState(false);
@@ -43,7 +44,7 @@ useEffect(()=>{
 const weatherDescription=getWeatherDescription(variables.weather_code,variables.is_day);
 
 setIcon(()=>{
-  const newIcon=require(`../assets/weather-icons/SVG/${weatherDescription[0]}.svg`);
+  const newIcon=icons[weatherDescription[0]];
   return newIcon}
   );
 setDescription(weatherDescription[1]);
@@ -60,7 +61,8 @@ setDescription(weatherDescription[1]);
          
           <View style={styles.currentWeather}> 
           {icon&&
-          <ImageBackground source={{uri:`../assets/weather-icons/SVG/${icon}.svg`}} style={{flex:1,width: '100%', height: '100%'}}> 
+          <>
+          
             <Text>Current Weather</Text>
             <Text>Temperature: {variables.temperature_2m}</Text>
             <Text>Humidity: {variables.relative_humidity_2m}</Text>
@@ -71,7 +73,8 @@ setDescription(weatherDescription[1]);
             <Text>Wind direction: {variables.wind_direction_10m}</Text>
             <Text>Weather code: {variables.weather_code}</Text>
             <Text>{icon}</Text>
-            </ImageBackground>}
+            </>
+          }
           </View>
           <View style={styles.details}>
       <Details/>

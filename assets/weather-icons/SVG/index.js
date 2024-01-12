@@ -1,0 +1,8 @@
+export {default as angry_clouds} from './angry_clouds.svg'
+export {default as day_clear} from './day_clear.svg'
+export {default as fog} from './fog.svg'
+export {default as mist} from './mist.svg'
+export {default as sleet} from './sleet.svg'
+export {default as snow} from './snow.svg'
+export {default as thunder} from './thunder.svg'
+export {default as tornado} from './tornado.svg'
