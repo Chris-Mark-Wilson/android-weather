@@ -101,5 +101,15 @@ export const getWeatherDescription = (weatherCode,isDay) => {
         "98":["snow_thunder","Thunderstorm combined with duststorm or sandstorm at time of observation"],
         "99":["snow_thunder","Thunderstorm, heavy, with hail at time of observation"]
     }
+
+    if(!isDay){
+        //change all day_clear to night_clear
+      for(let key in lookup){
+        if(lookup[key][0]==="day_clear"){
+          lookup[key][0]="night_half_moon_clear"
+        }
+      }
+    }
+
     return lookup[weatherCode.toString().padStart(2,"0")];
 }

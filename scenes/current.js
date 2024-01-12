@@ -24,6 +24,7 @@ export  const Current = () => {
     'rain':SVG.rain,
     'tornado':SVG.tornado,
     'overcast':SVG.overcast, 
+    'night_half_moon_clear':SVG.night_half_moon_clear,
     
   }
   const {location}=useContext(LocationContext);
@@ -217,7 +218,9 @@ setDescription(weatherDescription[1]);
           fontWeight:"bold",
           color:"white",
           opacity:1,
-          padding:5
+          padding:5,
+         
+          
         },
         cloud:{
           position:"absolute",
