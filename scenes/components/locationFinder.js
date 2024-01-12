@@ -13,7 +13,8 @@ useEffect(() => {
   .then((location)=>{
     setLocation({
       lat:location.coords.latitude,
-      lon:location.coords.longitude
+      lon:location.coords.longitude,
+      place:"current location"
     })
   })
   .catch((error)=>{
@@ -23,10 +24,11 @@ useEffect(() => {
 
   function setNewLocation(details){
   // on select from dropdown
-  
+  console.log(JSON.stringify(details,null,"  "))
     setLocation({
       lat:details.geometry.location.lat,
-      lon:details.geometry.location.lng
+      lon:details.geometry.location.lng,
+      place:details.formatted_address
     })
   }
   
@@ -44,7 +46,7 @@ useEffect(() => {
         query={{
           key: API_KEY , 
           language: "en", 
-          types:[ "cities"]
+          types:[ "geocode"]
         }}
         onFail={(error)=>console.log(error)}
         styles={{
@@ -55,6 +57,7 @@ useEffect(() => {
     </View>
       </>
   );
+  
 };
 
 const styles = StyleSheet.create({

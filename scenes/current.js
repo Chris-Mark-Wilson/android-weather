@@ -10,8 +10,9 @@ import * as SVG from '../assets/weather-icons/SVG';
 
 
 
+
 export  const Current = () => {
-//ensure these are exported from assets/SVG/index.js
+  //ensure these are exported from assets/SVG/index.js
   const iconMap={
     'day_clear':SVG.day_clear,
     'angry_clouds':SVG.angry_clouds,
@@ -23,8 +24,10 @@ export  const Current = () => {
     'rain':SVG.rain,
     'tornado':SVG.tornado,
     'overcast':SVG.overcast, 
-
+    
   }
+  const {location}=useContext(LocationContext);
+  const [placeName,setPlaceName]=useState(location.place);  
  //weathercode used to map to sgv component
   const [weatherCode, setWeatherCode] = useState('');
   //WeatherIcon used as background
@@ -47,15 +50,15 @@ export  const Current = () => {
     cloud_cover:0, 
   });
 
-const {location}=useContext(LocationContext);
+
 
 useEffect(() => {
-  if(location.long!=0 && location.lat!=0){
-    //load current weather
+  if(location.lon){
+    //load current weather using location
     getCurrentWeather(location)
     .then((data)=>{
-      
       SetVariables(data.current)
+      setPlaceName(location.place)
     })
     .catch((error)=>{
       console.log(error,"error in current.js")
@@ -82,22 +85,23 @@ setDescription(weatherDescription[1]);
        
           <LocationFinder/>
          
-          <View style={styles.currentWeather}> 
+          <View style={{...styles.currentWeather, backgroundColor:variables.is_day?"skyblue":"grey"}}> 
           {description&&
           <>
           
-            <WeatherIcon style={{opacity:1,position:"absolute",width: "100%", height: "100%"}} />
-            {/* <SVG.rain style={{position:"absolute",width: "100%", height: "100%"}} /> */}
-            <Text>Current Weather</Text>
-            <Text>Temperature: {variables.temperature_2m}</Text>
-            <Text>Humidity: {variables.relative_humidity_2m}</Text>
-            <Text>Real feel: {variables.apparent_temperature}</Text>
-            <Text>Rain: {variables.rain}</Text>
-            <Text>Cloud cover: {variables.cloud_cover}</Text>
-            <Text>Wind speed: {variables.wind_speed_10m}</Text>
-            <Text>Wind direction: {variables.wind_direction_10m}</Text>
-            <Text>Weather code: {variables.weather_code}</Text>
-            <Text>Description: {description}</Text>
+            <WeatherIcon style={{opacity:0.8,position:"absolute",width: "100%", height: "100%"}} />
+            
+            <Text style={styles.title}>Current Weather</Text>
+            <Text style={styles.placename}>{placeName}</Text>
+            <Text style={styles.temp}>{variables.temperature_2m}°C</Text>
+            <Text style={styles.humidity}>Rh: {variables.relative_humidity_2m}%</Text>
+            <Text style={styles.realFeel}>{variables.apparent_temperature}°C</Text>
+            <Text style={styles.rain}><SVG.water_drop style={{height:20,width:20,color:"white"}}/>:{variables.rain}mm</Text>
+            <Text style={styles.cloud}>Cloud: {variables.cloud_cover}%</Text>
+            <Text style={styles.windSpeed}><SVG.wind_icon style={{height:20,width:20}}/>: {variables.wind_speed_10m}mph</Text>
+        
+           
+            <Text style={styles.description}>{description}</Text>
             </>
         
           }
@@ -148,5 +152,104 @@ setDescription(weatherDescription[1]);
           borderRadius: 10,
           paddingLeft:10,
           paddingRight:10,
+        },
+        title:{
+          position:"absolute",
+          top:0,
+          fontSize:30,
+          fontWeight:"bold",
+          color:"white",
+      
+          opacity:1,
+          padding:5},
+
+        placename:{
+          position:"absolute",
+          top:30,
+          fontSize:20,
+          fontWeight:"bold",
+          color:"white",
+     
+          opacity:1,
+          padding:5
+        },
+        temp:{
+          position:"absolute",
+          top:60,
+          right:0,
+          fontSize:80,
+          fontWeight:"bold",
+          color:"white",
+       
+          opacity:1,
+          padding:5
+        },
+        
+        humidity:{
+          position:"absolute",
+          top:160,
+          right:0,
+          fontSize:20,
+          fontWeight:"bold",
+          color:"white",
+
+          opacity:1,
+          padding:5
+        
+        },
+        realFeel:{
+          position:"absolute",
+          top:160,
+          right:100,
+          fontSize:40,
+          fontWeight:"bold",
+          color:"white",
+          opacity:1,
+          padding:5
+        
+        },
+        
+        rain:{
+          position:"absolute",
+          top:200,
+          right:0,
+          fontSize:20,
+          fontWeight:"bold",
+          color:"white",
+          opacity:1,
+          padding:5
+        },
+        cloud:{
+          position:"absolute",
+          top:240,
+          right:0,
+          fontSize:20,
+          fontWeight:"bold",
+          color:"white",
+          opacity:1,
+          padding:5
+        },
+        windSpeed:{
+          position:"absolute",
+          top:280,
+          right:0,
+          fontSize:20,
+          fontWeight:"bold",
+          color:"white",
+          opacity:1,
+          padding:5
+        },
+        
+       
+     
+        description:{
+          position:"absolute",
+          top:320,
+          left:0,
+          fontSize:20,
+          fontWeight:"bold",
+          color:"white",
+          opacity:1,
+          padding:5
         },
       });
