@@ -14,7 +14,7 @@ useEffect(() => {
     setLocation({
       lat:location.coords.latitude,
       lon:location.coords.longitude,
-      place:"current location"
+      place:"Current location"
     })
   })
   .catch((error)=>{

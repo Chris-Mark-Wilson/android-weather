@@ -25,6 +25,7 @@ export  const Current = () => {
     'tornado':SVG.tornado,
     'overcast':SVG.overcast, 
     'night_half_moon_clear':SVG.night_half_moon_clear,
+  
     
   }
   const {location}=useContext(LocationContext);
@@ -94,12 +95,13 @@ setDescription(weatherDescription[1]);
             
             <Text style={styles.title}>Current Weather</Text>
             <Text style={styles.placename}>{placeName}</Text>
-            <Text style={styles.temp}>{variables.temperature_2m}°C</Text>
-            <Text style={styles.humidity}>Rh: {variables.relative_humidity_2m}%</Text>
+            <Text style={styles.temp}>{variables.temperature_2m}
+            °C</Text>
+            <Text style={styles.humidity}><SVG.water_drop style={{height:20, width:20}}/>  {variables.relative_humidity_2m}%</Text>
             <Text style={styles.realFeel}>{variables.apparent_temperature}°C</Text>
-            <Text style={styles.rain}><SVG.water_drop style={{height:20,width:20,color:"white"}}/>:{variables.rain}mm</Text>
-            <Text style={styles.cloud}>Cloud: {variables.cloud_cover}%</Text>
-            <Text style={styles.windSpeed}><SVG.wind_icon style={{height:20,width:20}}/>: {variables.wind_speed_10m}mph</Text>
+            <Text style={styles.rain}><SVG.rain_icon style={{fill:"white",height:20,width:20}}/> {variables.rain}mm</Text>
+            <Text style={styles.cloud}><SVG.cloud_icon style={{hieght:0,width:20}}/>  {variables.cloud_cover}%</Text>
+            <Text style={styles.windSpeed}><SVG.wind_icon style={{height:20,width:20}}/> {variables.wind_speed_10m}mph</Text>
         
            
             <Text style={styles.description}>{description}</Text>
@@ -246,9 +248,12 @@ setDescription(weatherDescription[1]);
        
      
         description:{
+          
           position:"absolute",
           top:320,
-          left:0,
+          
+          
+
           fontSize:20,
           fontWeight:"bold",
           color:"white",
