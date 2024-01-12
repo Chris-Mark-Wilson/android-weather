@@ -8,7 +8,8 @@ export const getCurrentWeather = async (location) => {
     return response.data;
     } 
     catch (error){
-        console.log(error);
+        console.log(error,"error in api");
+        return Promise.reject(error);
     }
 }
 
