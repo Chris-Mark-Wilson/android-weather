@@ -65,12 +65,13 @@ export const Details=()=> {
     },[]);
 
     return (
+      <View style={styles.details}>
       <View style={styles.container}>
         <FlatList
         horizontal={true}
           data={hourlyData}
           renderItem={({ item }) => (
-            <View style={{borderColor:"black",borderWidth:2,width:100,margin:12, alignItems:'center',justifyContent:'center'}}>
+            <View style={styles.listItems}>
               <Text style={{color:"black"}}>{item.time}</Text>
               <Text>Temp:{item.temp}</Text>
               <Text>Rain:{item.precip}</Text>
@@ -82,6 +83,7 @@ export const Details=()=> {
           keyExtractor={(item) => item.time}
           />
         
+      </View>
       </View>
     );
   }
@@ -95,4 +97,15 @@ export const Details=()=> {
       borderRadius: 10,
 
     },
+    details: {
+      flex: 0.25,
+      backgroundColor: "green",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "100%",
+      borderRadius: 10,
+      paddingLeft: 10,
+      paddingRight: 10,
+    },
+    listItems:{borderColor:"black",borderWidth:2,width:100,margin:12, alignItems:'center',justifyContent:'center'}
   });

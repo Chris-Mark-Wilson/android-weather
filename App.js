@@ -7,7 +7,7 @@ import { LocationProvider } from "./contexts/locationContext";
 
 import { useWindowDimensions, View,Text } from "react-native";
 import { TabView, TabBar, SceneMap } from "react-native-tab-view";
-import { CurrentProvider, SevenDaysProvider, TomorrowProvider } from "./contexts/weatherContext";
+import { IconProvider, SevenDaysProvider, VariablesProvider } from "./contexts/weatherContext";
 
 const renderScene = SceneMap({
   current: Current,
@@ -26,8 +26,8 @@ export default function App() {
   ]);
   return (
     <LocationProvider>
-      <CurrentProvider>
-        <TomorrowProvider>
+      <IconProvider>
+        <VariablesProvider>
           <SevenDaysProvider>
     <TabView
     renderTabBar={props => (
@@ -37,7 +37,7 @@ export default function App() {
             indicatorStyle={{ backgroundColor: 'red' ,borderColor:"black",height:"100%",borderWidth:1,margin :0, borderRadius:10,}}
             style={{ backgroundColor: 'pink'}}
             activeColor="blue"
-            inactiveColor="gray"
+            inactiveColor="white"
             
           tabStyle={{backgroundColor:"silver",borderWidth:1,margin :10,padding:0, borderRadius:10}}
           labelStyle={{fontSize:12,fontWeight:"bold"}}
@@ -52,8 +52,8 @@ export default function App() {
 
     />
       </SevenDaysProvider>
-      </TomorrowProvider>
-      </CurrentProvider>
+      </VariablesProvider>
+      </IconProvider>
     </LocationProvider>
   );
 }

@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     // width: 60,
     borderWidth: 1,
     borderColor: "gray",
-    borderRadius: 5,
+    borderRadius: 10,
     // marginTop: 10,
     // marginLeft: 10,
     // marginRight: 10,
