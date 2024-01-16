@@ -7,6 +7,7 @@ import { getCurrentWeather } from '../weather-api';
 import { getWeatherDescription } from '../functions/getWeatherDescription';
 //get all svg icons
 import * as SVG from '../assets/weather-icons/SVG';
+import { LinearGradient } from 'expo-linear-gradient';
 
 
 
@@ -51,11 +52,13 @@ export  const Current = () => {
     weather_code:0,
     cloud_cover:0, 
   });
+  const [time,setTime]=useState("");
+  const [timer,setTimer]=useState(0);
 
 
 
 useEffect(() => {
-  if(location.lon){
+  if(location.place){
     //load current weather using location
     getCurrentWeather(location)
     .then((data)=>{
@@ -76,8 +79,15 @@ const weatherDescription=getWeatherDescription(variables.weather_code,variables.
 //weather code comes back as icon description/iconMap keyname
 setWeatherCode(weatherDescription[0]);
 setDescription(weatherDescription[1]);
+
   }
 },[variables])
+useEffect(()=>{
+setTimeout(() => {
+  setTimer(timer+1)
+  setTime(new Date().toLocaleTimeString('en-US'))
+},1000);
+},[timer])
 
 
 
@@ -87,13 +97,21 @@ setDescription(weatherDescription[1]);
        
           <LocationFinder/>
          
-          <View style={{...styles.currentWeather, backgroundColor:variables.is_day?"skyblue":"grey"}}> 
+          <LinearGradient 
+          style={styles.currentWeather}
+          colors={variables.is_day?['blue','skyblue']:['black','grey']}> 
+
           {description&&
           <>
           
-            <WeatherIcon style={{opacity:0.8,position:"absolute",width: "100%", height: "100%"}} />
+            <WeatherIcon style={{opacity:0.8,position:"absolute",width: "100%", height:"100%"}} />
+
+
+            {/* cloud cover */}
+            {weatherCode==="day_clear" || weatherCode==="night_half_moon_clear"&&
+            SVG.overcast({style:{opacity:1,position:"absolute",width: `${variables.cloud_cover*5}px`, height:"100%"}})}
             
-            <Text style={styles.title}>Current Weather</Text>
+            <Text style={styles.title}>{time}</Text>
             <Text style={styles.placename}>{placeName}</Text>
             <Text style={styles.temp}>{variables.temperature_2m}
             °C</Text>
@@ -108,7 +126,7 @@ setDescription(weatherDescription[1]);
             </>
         
           }
-          </View>
+          </LinearGradient>
           <View style={styles.details}>
       <Details/>
       </View>
@@ -139,7 +157,7 @@ setDescription(weatherDescription[1]);
         },
         currentWeather: {
           flex:0.6,
-          backgroundColor:"skyblue",
+        
          alignItems: 'center',
           justifyContent: 'center',
           width:"100%",
@@ -187,23 +205,10 @@ setDescription(weatherDescription[1]);
           opacity:1,
           padding:5
         },
-        
-        humidity:{
-          position:"absolute",
-          top:160,
-          right:0,
-          fontSize:20,
-          fontWeight:"bold",
-          color:"white",
-
-          opacity:1,
-          padding:5
-        
-        },
         realFeel:{
           position:"absolute",
           top:160,
-          right:100,
+          right:0,
           fontSize:40,
           fontWeight:"bold",
           color:"white",
@@ -212,10 +217,24 @@ setDescription(weatherDescription[1]);
         
         },
         
+        humidity:{
+          position:"absolute",
+          top:100,
+          left:20,
+          fontSize:20,
+          fontWeight:"bold",
+          color:"white",
+
+          opacity:1,
+          padding:5
+        
+        },
+       
+        
         rain:{
           position:"absolute",
-          top:200,
-          right:0,
+          top:140,
+          left:20,
           fontSize:20,
           fontWeight:"bold",
           color:"white",
@@ -226,8 +245,8 @@ setDescription(weatherDescription[1]);
         },
         cloud:{
           position:"absolute",
-          top:240,
-          right:0,
+          top:180,
+          left:20,
           fontSize:20,
           fontWeight:"bold",
           color:"white",
@@ -236,8 +255,8 @@ setDescription(weatherDescription[1]);
         },
         windSpeed:{
           position:"absolute",
-          top:280,
-          right:0,
+          top:220,
+          left:20,
           fontSize:20,
           fontWeight:"bold",
           color:"white",
