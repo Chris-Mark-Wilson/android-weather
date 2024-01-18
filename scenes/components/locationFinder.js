@@ -9,9 +9,11 @@ export const LocationFinder = () => {
 
 const {location,setLocation}=useContext(LocationContext);
 useEffect(() => {
+  console.log("getting location in locationFinder.js",location)
   if(!location.place){
   getCurrentLocation()
   .then((location)=>{
+    console.log(location," got location in locationFinder.js")
     setLocation({
       lat:location.coords.latitude,
       lon:location.coords.longitude,
@@ -26,7 +28,7 @@ useEffect(() => {
 
   function setNewLocation(details){
   // on select from dropdown
-  console.log(JSON.stringify(details,null,"  "),"location details in locationFinder.js")
+  // console.log(JSON.stringify(details,null,"  "),"location details in locationFinder.js")
     setLocation({
       lat:details.geometry.location.lat,
       lon:details.geometry.location.lng,

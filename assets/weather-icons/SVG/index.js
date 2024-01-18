@@ -13,4 +13,5 @@ export {default as wind_icon} from './windIcon.svg'
 export {default as night_half_moon_clear} from './night_half_moon_clear.svg'
 export {default as cloud_icon} from './cloud_icon.svg'  
 export {default as rain_icon} from './rain_icon.svg'
+export {default as snow_icon} from './snow_icon.svg'
 // exported svgs's as properties of SVG object

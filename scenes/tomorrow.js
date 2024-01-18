@@ -1,9 +1,27 @@
-import React from 'react';
-import { StyleSheet, Text, View, Button, StatusBar } from 'react-native';
+import React ,{useEffect,useContext}from 'react';
+import {LocationContext} from '../contexts/locationContext';
+import { StyleSheet, Text, View, StatusBar } from 'react-native';
 
-
+import { getTomorrowsWeather } from '../weather-api';
 
 export  const Tomorrow = () => {
+
+  const { location } = useContext(LocationContext);
+
+  useEffect(() => {
+ 
+  //   if(location.lat){
+  //   getTomorrowsWeather(location)
+  //   .then((data) => {
+  //     console.log(JSON.stringify(data, null, 2),"tomorrow");
+  //   })
+  //   .catch((error) => {
+  //     console.log(error, "error in tomorrow.js");
+  //   });
+  // }
+    },[location]);
+
+
     return (
     
         <View style={styles.container}>

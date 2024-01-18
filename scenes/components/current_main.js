@@ -15,13 +15,14 @@ export const CurrentMain = () => {
   const [weatherCode, setWeatherCode] = useState("");
   //WeatherIcon used as background
   const WeatherIcon = iconMap[weatherCode];
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(null);
   const [time, setTime] = useState("");
   const [timer, setTimer] = useState(0);
 
   useEffect(() => {
     if (location.place) {
       //load current weather using location
+      console.log("got location in current.js, getting current weather")
       getCurrentWeather(location)
         .then((data) => {
           setVariables(data.current);
@@ -34,7 +35,9 @@ export const CurrentMain = () => {
   }, [location]);
 
   useEffect(() => {
-    if (variables.weather_code != 0) {
+    console.log("variables in current.js", variables)
+    if (variables.weather_code!=null) {
+      console.log("setting description, variables set",variables)
       //gets icon and wmo description based on weathercode
       const weatherDescription = getWeatherDescription(
         variables.weather_code,
@@ -70,16 +73,17 @@ export const CurrentMain = () => {
           />
 
           {/* cloud cover */}
-          {weatherCode === "day_clear" ||
-            (weatherCode === "night_half_moon_clear" &&
+          {(weatherCode === "day_clear" ||
+            weatherCode === "night_half_moon_clear") &&
               iconMap["overcast"]({
                 style: {
-                  opacity: 0.7,
+                  
+                  opacity:0.7,
                   position: "absolute",
                   width: `${variables.cloud_cover}%`,
                   height: "100%",
                 },
-              }))}
+              })}
 
           <Text style={styles.time}>{time}</Text>
           <Text style={styles.placename}>{placeName}</Text>
@@ -105,6 +109,11 @@ export const CurrentMain = () => {
           <Text style={styles.windSpeed}>
             <SVG.wind_icon style={{ height: 20, width: 20 }} />{" "}
             {variables.wind_speed_10m}mph
+          </Text>
+         
+            <Text style={styles.snowfall}>
+            <SVG.snow_icon style={{ height: 20, width: 20 }} />{" "} 
+            {variables.snowfall}mm
           </Text>
 
           <Text style={styles.description}>{description}</Text>
@@ -219,4 +228,14 @@ const styles = StyleSheet.create({
     opacity: 1,
     padding: 5,
   },
+  snowfall:{
+    position: "absolute",
+    top: 260,
+    left: 20,
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "white",
+    opacity: 1,
+    padding: 5,
+  }
 });
