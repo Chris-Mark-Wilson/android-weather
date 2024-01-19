@@ -10,17 +10,21 @@ export const LocationFinder = () => {
 const {location,setLocation}=useContext(LocationContext);
 useEffect(() => {
   console.log("getting location in locationFinder.js",location)
-  if(!location){
+  if(location===null){
   getCurrentLocation()
   .then((location)=>{
     console.log(location," got location in locationFinder.js")
-    setLocation(()=> {
-      return{
-      lat:location.coords.latitude,
-      lon:location.coords.longitude,
-      place:"Current location"
-      }
-    })
+    setLocation((old)=>{
+      const newLoc={...old}
+      console.log("setting location in locationFinder.js")
+     
+      newLoc.lat=location.coords.latitude,
+     newLoc.lon=location.coords.longitude,
+      newLoc.place="Current location"
+      return newLoc;
+    
+  }
+    )
   })
   .catch((error)=>{
     console.log(error,"error in get current location, locationFinder.js");
@@ -72,22 +76,21 @@ const styles = StyleSheet.create({
     zIndex: 2,
     position: "absolute",
     top:0,
-    flex: 0.06,
-    // height: "100%",
+  flex: 1,
+    // height: "10%",
     width: "100%",
     backgroundColor: "skyblue",
    
   },
   textInput: {
-    flex:1,
-    // height: 65,
-    // width: 60,
-    // borderWidth: 1,
-    // borderColor: "red",
+flex:1,
+    height: "100%",
+    // color: "#5d5d5d",
+    fontSize: 16,
+    backgroundColor: "white",
     // borderRadius: 10,
-    // marginTop: 10,
-    // marginLeft: 10,
-    // marginRight: 10,
+    // margin: 10,
     // padding: 10,
+
   }
 })

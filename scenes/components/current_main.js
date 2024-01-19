@@ -22,14 +22,14 @@ export const CurrentMain = () => {
   useEffect(() => {
     if (location!=null) {
       //load current weather using location
-      console.log("got location in current.js, getting current weather")
+      console.log("got location in current_main.js, getting current weather")
       getCurrentWeather(location)
         .then((data) => {
           setVariables(data.current);
           setPlaceName(location.place);
         })
         .catch((error) => {
-          console.log(error, "error in current.js");
+          console.log(error, "error in current_main.js");
         });
     }
   }, [location]);
@@ -125,8 +125,10 @@ export const CurrentMain = () => {
 
 const styles = StyleSheet.create({
   currentWeather: {
-    // flex: 0.75,
-height:"65%",
+    position: "absolute",
+    top: "7%",
+    zIndex: 1,
+height:"68%",
     alignItems: "center",
     justifyContent: "center",
     width: "100%",

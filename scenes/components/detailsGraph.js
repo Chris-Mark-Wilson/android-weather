@@ -170,7 +170,8 @@ useEffect(()=>{
   const styles = StyleSheet.create({
 
     details: {
-      // flex: 0.25,
+     position:"absolute",
+      top:"75%",
       height:"25%",
       flexDirection:"column",
       backgroundColor: "green",
