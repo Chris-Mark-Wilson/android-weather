@@ -29,7 +29,7 @@ export const getHourlyWeather = async (location) => {
     const date = new Date().toISOString().slice(0,10);
 
     try{
-    const response = await axios.get(`${BASE_URL}latitude=${location.lat}&longitude=${location.lon}&hourly=apparent_temperature,precipitation_probability,rain,snowfall,weather_code,wind_speed_10m,is_day&wind_speed_unit=mph&start_date=${date}&end_date=${date}`);
+    const response = await axios.get(`${BASE_URL}latitude=${location.lat}&longitude=${location.lon}&hourly=apparent_temperature,precipitation_probability,rain,snowfall,weather_code,wind_speed_10m,cloud_cover,is_day&wind_speed_unit=mph&start_date=${date}&end_date=${date}`);
     return response.data;
     } 
     catch (error){

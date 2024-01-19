@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
-    borderRadius: 10,
+   
   },
   time: {
     position: "absolute",

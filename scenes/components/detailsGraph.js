@@ -1,4 +1,4 @@
-import React, { useEffect,useState,useContext } from 'react';
+import React, { useEffect,useState,useContext,useRef } from 'react';
 import { StyleSheet, Text, View,FlatList } from 'react-native';
 import { LocationContext } from '../../contexts/locationContext';
 import { IconContext } from '../../contexts/weatherContext';
@@ -9,6 +9,7 @@ import {Canvas, Path} from "@shopify/react-native-skia";
 export const Details=()=> {
   const [hourlyData,setHourlyData] = useState([]);
   const { iconMap,SVG } = useContext(IconContext);
+  const flatListRef = useRef(null);
 
 
   
@@ -58,6 +59,8 @@ if(location.lat){
       icon:iconMap[getWeatherDescription(data.hourly.weather_code[index],data.hourly.is_day[index])[0]],
 
       isDay:data.hourly.is_day[index],
+      weatherCode:data.hourly.weather_code[index],
+      cloudCover:data.hourly.cloud_cover[index],
  
     };
     
@@ -71,6 +74,17 @@ if(location.lat){
 }
 },[location])
 
+useEffect(()=>{
+  //get time now that matches time in hourlyData
+  //scroll to that index
+  if(hourlyData.length>0){
+    const index = hourlyData.findIndex((item)=>{
+      return item.time === new Date().toLocaleTimeString('en-US', { hour: 'numeric'})
+    })
+    flatListRef.current.scrollToIndex({animated: true, index});
+  }
+},[hourlyData])
+
 
     return (
       <View style={styles.details}>
@@ -78,12 +92,21 @@ if(location.lat){
          {/* render key for graph */}
           <Text style={{...styles.keyText,color:"red"}}>Temp</Text>
           <Text style={{...styles.keyText,color:"blue"}}>Rain%</Text>
-          <Text style={{...styles.keyText,color:"white"}}>Snow</Text>
+          <Text style={{...styles.keyText,color:"gray"}}>Snow</Text>
           <Text style={{...styles.keyText,color:"black"}}>Wind</Text>
          
         </View>
       <View style={styles.listContainer}>
         <FlatList
+        ref={flatListRef}
+        onScrollToIndexFailed={info => {
+          const wait = new Promise(resolve => setTimeout(resolve, 500));
+          wait.then(() => {
+            flatListRef.current?.scrollToIndex({ index: info.index, animated: true });
+          });
+        
+        }
+      }
         horizontal={true}
           data={hourlyData}
           keyExtractor={(item) => item.time}
@@ -98,6 +121,20 @@ if(location.lat){
               </Text>
               {/* render icon for each hour */}
                 <item.icon style={{opacity:1,position:"absolute",width:"100%",height:"100%"}}/>
+
+              {/* cloud cover */}
+                {(item.weatherCode === "day_clear" ||
+            item.weatherCode === "night_half_moon_clear") &&
+              iconMap["overcast"]({
+                style: {
+                  opacity:0.7,
+                  position: "absolute",
+                  width: `${item.cloudCover}%`,
+                  height: "100%",
+                },
+              })}
+
+              {/* render graph for each hour */}
               <Canvas style={styles.canvas}>
                 <Path path={item.temp.path}
                 color={'red'}
@@ -140,8 +177,7 @@ if(location.lat){
       // justifyContent: "center",
       width: "100%",
       borderRadius: 10,
-      paddingLeft: 10,
-      paddingRight: 10,
+     
     },
     listContainer: {
       width: "100%",
@@ -158,7 +194,7 @@ if(location.lat){
       // borderColor:"red",
       // borderWidth:2,
       width:80,
-      height:130,
+      height:140,
       padding:0,
       alignItems:'center',
       justifyContent:'center'
@@ -189,8 +225,8 @@ if(location.lat){
       width:"100%",
       height:"15%",
       padding:0,
-      backgroundColor:"lightgray",
-      borderRadius:10,
+      backgroundColor:"lightblue",
+     
     },
     keyText:{
       textDecorationLine:"underline",
