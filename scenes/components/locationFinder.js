@@ -10,14 +10,16 @@ export const LocationFinder = () => {
 const {location,setLocation}=useContext(LocationContext);
 useEffect(() => {
   console.log("getting location in locationFinder.js",location)
-  if(!location.place){
+  if(!location){
   getCurrentLocation()
   .then((location)=>{
     console.log(location," got location in locationFinder.js")
-    setLocation({
+    setLocation(()=> {
+      return{
       lat:location.coords.latitude,
       lon:location.coords.longitude,
       place:"Current location"
+      }
     })
   })
   .catch((error)=>{
@@ -66,19 +68,23 @@ useEffect(() => {
 
 const styles = StyleSheet.create({
   container: {
+    //keep on top or cant see results
     zIndex: 2,
     position: "absolute",
     top:0,
-    flex: 1,
+    flex: 0.06,
+    // height: "100%",
     width: "100%",
+    backgroundColor: "skyblue",
    
   },
   textInput: {
-    // height: 50,
+    flex:1,
+    // height: 65,
     // width: 60,
-    borderWidth: 1,
-    borderColor: "gray",
-    borderRadius: 10,
+    // borderWidth: 1,
+    // borderColor: "red",
+    // borderRadius: 10,
     // marginTop: 10,
     // marginLeft: 10,
     // marginRight: 10,

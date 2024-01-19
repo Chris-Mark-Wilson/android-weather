@@ -16,10 +16,10 @@ export const Details=()=> {
   const { location } = useContext(LocationContext);
 
 useEffect(()=>{
-if(location.lat){
+if(location!=null){
   getHourlyWeather(location)
   .then((data)=>{
-    console.log(JSON.stringify(data,null,4)," - hourly weather detailsGraph.js");
+   
     //24 hours of data, 1 hour intervals
     //create ranges max-min for each data point
     
@@ -59,7 +59,7 @@ if(location.lat){
       icon:iconMap[getWeatherDescription(data.hourly.weather_code[index],data.hourly.is_day[index])[0]],
 
       isDay:data.hourly.is_day[index],
-      weatherCode:data.hourly.weather_code[index],
+      weatherCode:getWeatherDescription(data.hourly.weather_code[index],data.hourly.is_day[index])[0],
       cloudCover:data.hourly.cloud_cover[index],
  
     };
@@ -127,7 +127,7 @@ useEffect(()=>{
             item.weatherCode === "night_half_moon_clear") &&
               iconMap["overcast"]({
                 style: {
-                  opacity:0.7,
+                  opacity:1,
                   position: "absolute",
                   width: `${item.cloudCover}%`,
                   height: "100%",
@@ -170,13 +170,15 @@ useEffect(()=>{
   const styles = StyleSheet.create({
 
     details: {
-      flex: 0.25,
+      // flex: 0.25,
+      height:"25%",
       flexDirection:"column",
       backgroundColor: "green",
       alignItems: "center",
       // justifyContent: "center",
       width: "100%",
-      borderRadius: 10,
+      // borderWidth:2,
+      // borderRadius: 10,
      
     },
     listContainer: {

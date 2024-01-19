@@ -34,8 +34,8 @@ export default function App() {
       <View style={{backgroundColor:"lightblue"}}>
           <TabBar
             {...props}
-            indicatorStyle={{ backgroundColor: 'red' ,borderColor:"black",height:"100%",borderWidth:1,margin :0, borderRadius:10,}}
-            style={{ backgroundColor: 'pink'}}
+            indicatorStyle={{ backgroundColor: 'skyblue' ,borderColor:"black",height:"100%",borderWidth:1,margin :0, borderRadius:10,}}
+            style={{ backgroundColor: 'blue'}}
             activeColor="blue"
             inactiveColor="white"
             

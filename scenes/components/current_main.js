@@ -10,7 +10,7 @@ export const CurrentMain = () => {
   const { variables, setVariables } = useContext(VariablesContext);
   const { iconMap, SVG } = useContext(IconContext);
   const { location } = useContext(LocationContext);
-  const [placeName, setPlaceName] = useState(location.place);
+  const [placeName, setPlaceName] = useState(null);
   //weathercode used to map to sgv component
   const [weatherCode, setWeatherCode] = useState("");
   //WeatherIcon used as background
@@ -20,7 +20,7 @@ export const CurrentMain = () => {
   const [timer, setTimer] = useState(0);
 
   useEffect(() => {
-    if (location.place) {
+    if (location!=null) {
       //load current weather using location
       console.log("got location in current.js, getting current weather")
       getCurrentWeather(location)
@@ -125,8 +125,8 @@ export const CurrentMain = () => {
 
 const styles = StyleSheet.create({
   currentWeather: {
-    flex: 0.6,
-
+    // flex: 0.75,
+height:"65%",
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
