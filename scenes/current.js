@@ -2,13 +2,43 @@ import { StyleSheet, Text, View, StatusBar } from "react-native";
 import { Details } from "./components/detailsGraph";
 import { LocationFinder } from "./components/locationFinder";
 import { CurrentMain } from "./components/current_main";
+import { useContext,useEffect } from "react";
+import { LocationContext } from "../contexts/locationContext";
+import {getCurrentLocation} from "../functions/getCurrentLocation";
 
 export const Current = () => {
+
+  const {location,setLocation}=useContext(LocationContext);
+
+useEffect(() => {
+  console.log("getting location in locationFinder.js",location)
+  if(location===null){
+  getCurrentLocation()
+  .then((location)=>{
+    console.log(location," got location in locationFinder.js")
+    setLocation((old)=>{
+      const newLoc={...old}
+      console.log("setting location in locationFinder.js")
+     
+      newLoc.lat=location.coords.latitude,
+     newLoc.lon=location.coords.longitude,
+      newLoc.place="Current location"
+      return newLoc;
+    
+  }
+    )
+  })
+  .catch((error)=>{
+    console.log(error,"error in get current location, locationFinder.js");
+  })
+}
+},[])
+
   return (
     <View style={styles.container}>
-      <LocationFinder />
-      <CurrentMain />
-      <Details />
+      <LocationFinder setLocation={setLocation}/>
+      <CurrentMain location={location}/>
+      <Details location={location}/>
       <StatusBar style="auto" />
     </View>
   );

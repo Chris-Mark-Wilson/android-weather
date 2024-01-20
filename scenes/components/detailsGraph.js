@@ -6,14 +6,14 @@ import { getHourlyWeather } from '../../weather-api';
 import { getWeatherDescription } from '../../functions/getWeatherDescription';
 import { LinearGradient } from 'expo-linear-gradient';
 import {Canvas, Path} from "@shopify/react-native-skia";
-export const Details=()=> {
+export const Details=({location})=> {
   const [hourlyData,setHourlyData] = useState([]);
   const { iconMap,SVG } = useContext(IconContext);
   const flatListRef = useRef(null);
 
 
   
-  const { location } = useContext(LocationContext);
+ 
 
 useEffect(()=>{
 if(location!=null){

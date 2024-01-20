@@ -2,14 +2,14 @@ import { StyleSheet, Text } from "react-native";
 import { useContext, useState, useEffect } from "react";
 
 import { LinearGradient } from "expo-linear-gradient";
-import { LocationContext } from "../../contexts/locationContext";
+
 import { getCurrentWeather } from "../../weather-api";
 import { getWeatherDescription } from "../../functions/getWeatherDescription";
 import { IconContext, VariablesContext } from "../../contexts/weatherContext";
-export const CurrentMain = () => {
+export const CurrentMain = ({location}) => {
   const { variables, setVariables } = useContext(VariablesContext);
   const { iconMap, SVG } = useContext(IconContext);
-  const { location } = useContext(LocationContext);
+
   const [placeName, setPlaceName] = useState(null);
   //weathercode used to map to sgv component
   const [weatherCode, setWeatherCode] = useState("");
