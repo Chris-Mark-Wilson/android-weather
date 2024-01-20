@@ -7,9 +7,15 @@ import { getWeatherDescription } from '../../functions/getWeatherDescription';
 import { LinearGradient } from 'expo-linear-gradient';
 import {Canvas, Path} from "@shopify/react-native-skia";
 export const Details=({location})=> {
+
   const [hourlyData,setHourlyData] = useState([]);
   const { iconMap,SVG } = useContext(IconContext);
   const flatListRef = useRef(null);
+const [tempRange,setTempRange]=useState([0,0]); 
+const [precipRange,setPrecipRange]=useState([0,0]);
+const [snowRange,setSnowRange]=useState([0,0]);
+const [windRange,setWindRange]=useState([0,0]);
+
 
 
   
@@ -22,21 +28,27 @@ if(location!=null){
    
     //24 hours of data, 1 hour intervals
     //create ranges max-min for each data point
+
+    let range=[0,0]
     
-    const tempRange = [Math.min(...data.hourly.apparent_temperature),Math.max(...data.hourly.apparent_temperature)];
-    const tempMultiplier=70/((Math.round(tempRange[1]-tempRange[0]))+1);
+     range=[Math.min(...data.hourly.apparent_temperature),Math.max(...data.hourly.apparent_temperature)];
+     setTempRange(range);
+    const tempMultiplier=70/((Math.round(range[1]-range[0]))+1);
     console.log(tempMultiplier," -temp multiplier")
 
-    const precipRange = [Math.min(...data.hourly.precipitation_probability),Math.max(...data.hourly.precipitation_probability)];
-    const precipMultiplier=80/((Math.round(precipRange[1]-precipRange[0]))+1);
+    range = [Math.min(...data.hourly.precipitation_probability),Math.max(...data.hourly.precipitation_probability)];
+    setPrecipRange(range);
+    const precipMultiplier=80/((Math.round(range[1]-range[0]))+1);
     console.log(precipMultiplier," -precip multiplier")
 
-    const snowRange = [Math.min(...data.hourly.snowfall),Math.max(...data.hourly.snowfall)];
-    const snowMultiplier=75/((Math.round(snowRange[1]-snowRange[0]))+1);
+    range = [Math.min(...data.hourly.snowfall),Math.max(...data.hourly.snowfall)];
+    setSnowRange(range);
+    const snowMultiplier=75/((Math.round(range[1]-range[0]))+1);
     console.log(snowMultiplier," -snow multiplier")
     
-    const windRange = [Math.min(...data.hourly.wind_speed_10m),Math.max(...data.hourly.wind_speed_10m)];
-    const windMultiplier=60/((Math.round(windRange[1]-windRange[0]))+1);
+    range = [Math.min(...data.hourly.wind_speed_10m),Math.max(...data.hourly.wind_speed_10m)];
+    setWindRange(range);
+    const windMultiplier=60/((Math.round(range[1]-range[0]))+1);
     console.log(windMultiplier," -wind multiplier")
  
     console.log(tempRange,precipRange,snowRange,windRange," -temp,precip,snow,wind ranges")
@@ -90,10 +102,10 @@ useEffect(()=>{
       <View style={styles.details}>
         <View style={styles.key}>
          {/* render key for graph */}
-          <Text style={{...styles.keyText,color:"red"}}>Temp</Text>
-          <Text style={{...styles.keyText,color:"blue"}}>Rain%</Text>
-          <Text style={{...styles.keyText,color:"gray"}}>Snow</Text>
-          <Text style={{...styles.keyText,color:"black"}}>Wind</Text>
+          <Text style={{...styles.keyText,color:"red"}}>{tempRange[0]} . {tempRange[1]} °C</Text>
+          <Text style={{...styles.keyText,color:"blue"}}>{precipRange[0]} . {precipRange[1]} %</Text>
+          <Text style={{...styles.keyText,color:"gray"}}>{snowRange[0]} . {snowRange[1]} mm</Text>
+          <Text style={{...styles.keyText,color:"black"}}>{windRange[0]}/{windRange[1]} mph</Text>
          
         </View>
       <View style={styles.listContainer}>
@@ -233,6 +245,10 @@ useEffect(()=>{
     },
     keyText:{
       textDecorationLine:"underline",
+      
+      textAlign:'center',
+      width:"25%",
+      borderWidth:1
       
     }
   });
