@@ -11,10 +11,10 @@ export const Details=({location})=> {
   const [hourlyData,setHourlyData] = useState([]);
   const { iconMap,SVG } = useContext(IconContext);
   const flatListRef = useRef(null);
-const [tempRange,setTempRange]=useState([0,0]); 
-const [precipRange,setPrecipRange]=useState([0,0]);
-const [snowRange,setSnowRange]=useState([0,0]);
-const [windRange,setWindRange]=useState([0,0]);
+const [tempRange,setTempRange]=useState([]); 
+const [precipRange,setPrecipRange]=useState([]);
+const [snowRange,setSnowRange]=useState([]);
+const [windRange,setWindRange]=useState([]);
 
 
 
@@ -32,22 +32,22 @@ if(location!=null){
     let range=[0,0]
     
      range=[Math.min(...data.hourly.apparent_temperature),Math.max(...data.hourly.apparent_temperature)];
-     setTempRange(range);
+     if(!tempRange===range) setTempRange(()=>range);
     const tempMultiplier=70/((Math.round(range[1]-range[0]))+1);
     console.log(tempMultiplier," -temp multiplier")
 
     range = [Math.min(...data.hourly.precipitation_probability),Math.max(...data.hourly.precipitation_probability)];
-    setPrecipRange(range);
+    if(!precipRange===range) setPrecipRange(()=>range);
     const precipMultiplier=80/((Math.round(range[1]-range[0]))+1);
     console.log(precipMultiplier," -precip multiplier")
 
     range = [Math.min(...data.hourly.snowfall),Math.max(...data.hourly.snowfall)];
-    setSnowRange(range);
+    if(!snowRange===range) setSnowRange(()=>range);
     const snowMultiplier=75/((Math.round(range[1]-range[0]))+1);
     console.log(snowMultiplier," -snow multiplier")
     
     range = [Math.min(...data.hourly.wind_speed_10m),Math.max(...data.hourly.wind_speed_10m)];
-    setWindRange(range);
+    if(!windRange===range) setWindRange(()=>range);
     const windMultiplier=60/((Math.round(range[1]-range[0]))+1);
     console.log(windMultiplier," -wind multiplier")
  
@@ -84,7 +84,7 @@ if(location!=null){
     console.log(error,"error in hourly weather");
   })
 }
-},[location])
+},[location,tempRange,precipRange,snowRange,windRange])
 
 useEffect(()=>{
   //get time now that matches time in hourlyData
@@ -108,9 +108,10 @@ useEffect(()=>{
           <Text style={{...styles.keyText,color:"black"}}>{windRange[0]}/{windRange[1]} mph</Text>
          
         </View>
-      <View style={styles.listContainer}>
+        <View style={styles.listContainer} >
         <FlatList
-        ref={flatListRef}
+        contentContainerStyle={styles.listContainer}
+        ref={flatListRef}//used for scroll to index function
         onScrollToIndexFailed={info => {
           const wait = new Promise(resolve => setTimeout(resolve, 500));
           wait.then(() => {
@@ -186,30 +187,29 @@ useEffect(()=>{
       top:"75%",
       height:"25%",
       flexDirection:"column",
-      backgroundColor: "green",
+    
       alignItems: "center",
-      // justifyContent: "center",
+   
       width: "100%",
-      // borderWidth:2,
-      // borderRadius: 10,
+    
      
     },
     listContainer: {
-      width: "100%",
-      height:"85%",
+      // width: "100%",
+      height:"100%",
       backgroundColor: 'lightgray',
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection:"row",
-      borderRadius: 10,
+    
 
     },
     listItem:{
-      flex:1,
+      flex:0,
       // borderColor:"red",
       // borderWidth:2,
       width:80,
-      height:140,
+      height:"100%",
       padding:0,
       alignItems:'center',
       justifyContent:'center'
