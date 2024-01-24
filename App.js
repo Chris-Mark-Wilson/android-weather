@@ -4,10 +4,10 @@ import { Current } from "./scenes/current";
 import { Tomorrow } from "./scenes/tomorrow";
 import { SevenDays } from "./scenes/sevenDays";
 import { LocationProvider } from "./contexts/locationContext";
-
-import { useWindowDimensions, View,Text } from "react-native";
+import { IconProvider } from "./contexts/iconContext";
+import { useWindowDimensions, View} from "react-native";
 import { TabView, TabBar, SceneMap } from "react-native-tab-view";
-import { IconProvider, SevenDaysProvider, VariablesProvider } from "./contexts/weatherContext";
+import { SevenDaysProvider, VariablesProvider } from "./contexts/weatherContext";
 
 const renderScene = SceneMap({
   current: Current,
@@ -20,7 +20,7 @@ export default function App() {
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: "current", title: "Current weather" },
+    { key: "current", title: "Today" },
     { key: "tomorrow", title: "Tomorrow" },
     { key: "sevenDays", title: "7 Days" },
   ]);
@@ -31,24 +31,24 @@ export default function App() {
           <SevenDaysProvider>
     <TabView
     renderTabBar={props => (
-      <View style={{backgroundColor:"lightblue"}}>
+      <View >
           <TabBar
             {...props}
-            indicatorStyle={{ backgroundColor: 'skyblue' ,borderColor:"black",height:"100%",borderWidth:1,margin :0, borderRadius:10,}}
-            style={{ backgroundColor: 'blue'}}
+            indicatorStyle={{ backgroundColor: 'orange' ,height:5,margin :0,}}
+            style={{ backgroundColor: 'blue',height:40,padding:3, }}
             activeColor="blue"
             inactiveColor="white"
             
-          tabStyle={{backgroundColor:"silver",borderWidth:1,margin :10,padding:0, borderRadius:10}}
-          labelStyle={{fontSize:12,fontWeight:"bold"}}
+          tabStyle={{backgroundColor:"silver",borderWidth:1,margin :2,padding:0,height:25}}
+          labelStyle={{fontSize:12,fontWeight:"bold",padding:0,margin:0,height:40}}
               />
     </View>
       )}
       navigationState={{ index, routes }}
       renderScene={renderScene}
       onIndexChange={setIndex}
-      initialLayout={{ width: layout.width }}
-  style={{backgroundColor:"lightblue",margin :5,padding:0, borderRadius:10}}
+      initialLayout={{ width: layout.width,height:20 }}
+  style={{backgroundColor:"lightblue",margin :5,padding:0,height:10, }}
 
     />
       </SevenDaysProvider>

@@ -1,7 +1,7 @@
 export const getWeatherDescription = (weatherCode,isDay) => {
     const lookup={
         "00":["day_clear","Cloud development not observed or not observable"],
-        "01":["day_clear","	Clouds generally dissolving or becoming less developed"],
+        "01":["day_clear","Clouds generally dissolving or becoming less developed"],
         "02":["day_clear","State of sky on the whole unchanged"],
         "03":["overcast","Clouds generally forming or developing"],
         "04":["angry_clouds","Visibility reduced by smoke, e.g. veldt or forest fires, industrial smoke or volcanic ashes"],
@@ -50,16 +50,16 @@ export const getWeatherDescription = (weatherCode,isDay) => {
         "47":["fog","Fog or ice fog, sky invisible, has begun or has become thicker during the preceding hour"],
         "48":["fog","Fog depositing rime, sky visible"],
         "49":["fog","Fog depositing rime, sky invisible"],
-        "50":["mist","Drzzle, not freezing, intermittent, slight at time of observation"],
-        "51":["mist","Drzzle, not freezing, continuous, slight at time of observation"],
-        "52":["mist","Drzzle, not freezing, intermittent, moderate at time of observation"],
-        "53":["mist","Drzzle, not freezing, continuous, moderate at time of observation"],
-        "54":["mist","Drzzle, not freezing, intermittent, heavy at time of observation"],
-        "55":["mist","Drzzle, not freezing, continuous, heavy at time of observation"],
-        "56":["mist","Drzzle, freezing, slight"],
-        "57":["sleet","Dizzle, freezing, moderate or heavy"],
-        "58":["rain","Drzzle and rain, slight"],
-        "59":["rain","Drzzle and rain, moderate or heavy"],
+        "50":["mist","Drizzle, not freezing, intermittent, slight at time of observation"],
+        "51":["mist","Drizzle, not freezing, continuous, slight at time of observation"],
+        "52":["mist","Drizzle, not freezing, intermittent, moderate at time of observation"],
+        "53":["mist","Drizzle, not freezing, continuous, moderate at time of observation"],
+        "54":["mist","Drizzle, not freezing, intermittent, heavy at time of observation"],
+        "55":["mist","Drizzle, not freezing, continuous, heavy at time of observation"],
+        "56":["mist","Drizzle, freezing, slight"],
+        "57":["sleet","Drizzle, freezing, moderate or heavy"],
+        "58":["rain","Drizzle and rain, slight"],
+        "59":["rain","Drizzle and rain, moderate or heavy"],
         "60":["rain","Rain, not freezing, intermittent, slight at time of observation"],
         "61":["rain","Rain, not freezing, continuous, slight at time of observation"],
         "62":["rain","Rain, not freezing, intermittent, moderate at time of observation"],
@@ -101,7 +101,7 @@ export const getWeatherDescription = (weatherCode,isDay) => {
         "98":["snow_thunder","Thunderstorm combined with duststorm or sandstorm at time of observation"],
         "99":["snow_thunder","Thunderstorm, heavy, with hail at time of observation"]
     }
-
+//any 1st element of lookup returned MUST ALSO be exported by index.js in assets/SVG
     if(!isDay){
         //change all day_clear to night_clear
       for(let key in lookup){
