@@ -5,21 +5,20 @@ import { CurrentMain } from "./components/current_main";
 import { useContext,useEffect } from "react";
 import { LocationContext } from "../contexts/locationContext";
 import {getCurrentLocation} from "../functions/getCurrentLocation";
+import { HourlyScroll } from "./components/hourlyScroll";
 
 export const Current = () => {
 
   const {location,setLocation}=useContext(LocationContext);
 
 useEffect(() => {
-  console.log("getting location in locationFinder.js",location)
-  if(location===null){
+  console.log("getting location in current.js",location)
+  if(!location.place){
   getCurrentLocation()
   .then((location)=>{
-    console.log(location," got location in locationFinder.js")
+
     setLocation((old)=>{
       const newLoc={...old}
-      console.log("setting location in locationFinder.js")
-     
       newLoc.lat=location.coords.latitude,
      newLoc.lon=location.coords.longitude,
       newLoc.place="Current location"
@@ -32,13 +31,14 @@ useEffect(() => {
     console.log(error,"error in get current location, locationFinder.js");
   })
 }
-},[])
+},[location])
 
   return (
     <View style={styles.container}>
-      <LocationFinder setLocation={setLocation}/>
-      <CurrentMain location={location}/>
-      <Details location={location}/>
+      <LocationFinder location={location} setLocation={setLocation}/>
+      {/* <CurrentMain location={location}/>
+      <Details location={location}/> */}
+      <HourlyScroll location={location} setLocation={setLocation} />
       <StatusBar style="auto" />
     </View>
   );

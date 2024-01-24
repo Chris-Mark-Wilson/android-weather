@@ -20,7 +20,7 @@ export const CurrentMain = ({location}) => {
   const [timer, setTimer] = useState(0);
 
   useEffect(() => {
-    if (location!=null) {
+    if (location) {
       //load current weather using location
       console.log("got location in current_main.js, getting current weather")
       getCurrentWeather(location)
@@ -125,9 +125,9 @@ export const CurrentMain = ({location}) => {
 
 const styles = StyleSheet.create({
   currentWeather: {
-    position: "absolute",
-    top: "7%",
-    zIndex: 1,
+    // position: "absolute",
+    // top: "7%",
+    // zIndex: 1,
 height:"68%",
     alignItems: "center",
     justifyContent: "center",

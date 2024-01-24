@@ -14,4 +14,6 @@ export {default as night_half_moon_clear} from './night_half_moon_clear.svg'
 export {default as cloud_icon} from './cloud_icon.svg'  
 export {default as rain_icon} from './rain_icon.svg'
 export {default as snow_icon} from './snow_icon.svg'
+export {default as snow_thunder} from './snow_thunder.svg'
+export {default as rain_thunder} from './rain_thunder.svg'
 // exported svgs's as properties of SVG object
