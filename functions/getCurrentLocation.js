@@ -5,7 +5,7 @@ import * as Location from 'expo-location';
 
 export const getCurrentLocation= async()=> {
 
-console.log("in getcurrentlocation")
+// console.log("in getcurrentlocation")
   
 
     try{
@@ -18,7 +18,7 @@ console.log("permission not granted" )
 
       console.log("permission granted awaiting location");
       let location = await Location.getCurrentPositionAsync();
-      console.log("location recieved in getCurrentLocation",location);  
+      // console.log("location recieved in getCurrentLocation",location);  
       return location;
     }
     catch (error){

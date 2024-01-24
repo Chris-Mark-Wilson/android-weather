@@ -6,7 +6,7 @@ import{API_KEY} from '@env'
 
 export const LocationFinder = ({setLocation}) => { 
 
-console.log(API_KEY,"api key in locationFinder.js")
+
 
   function setNewLocation(details){
   // on select from dropdown

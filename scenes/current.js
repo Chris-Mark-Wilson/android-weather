@@ -5,6 +5,7 @@ import { CurrentMain } from "./components/current_main";
 import { useContext,useEffect } from "react";
 import { LocationContext } from "../contexts/locationContext";
 import {getCurrentLocation} from "../functions/getCurrentLocation";
+import { HourlyScroll } from "./components/hourlyScroll";
 
 export const Current = () => {
 
@@ -15,10 +16,10 @@ useEffect(() => {
   if(location===null){
   getCurrentLocation()
   .then((location)=>{
-    console.log(location," got location in locationFinder.js")
+
     setLocation((old)=>{
       const newLoc={...old}
-      console.log("setting location in locationFinder.js")
+      
      
       newLoc.lat=location.coords.latitude,
      newLoc.lon=location.coords.longitude,
@@ -37,8 +38,9 @@ useEffect(() => {
   return (
     <View style={styles.container}>
       <LocationFinder setLocation={setLocation}/>
-      <CurrentMain location={location}/>
-      <Details location={location}/>
+      {/* <CurrentMain location={location}/>
+      <Details location={location}/> */}
+      <HourlyScroll location={location} />
       <StatusBar style="auto" />
     </View>
   );
