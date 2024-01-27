@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet} from "react-native"
 import { useWindowDimensions } from "react-native"
-import { getMapOverlayUris } from "../../functions/getMapOverlayUris"
+import { getMapOverlayUrls } from "../../functions/getMapOverlayUrls"
+import { downloadMapOverlays } from "../../functions/downloadMapOverlays"
 import {useEffect,useState} from "react"
 
 
@@ -29,8 +30,9 @@ import {useEffect,useState} from "react"
 
     useEffect(() => {
       if (isUK) {
-        getMapOverlayUris().then((urlList) => {
-            //urlList structure is {layerName:timesteps:{timestep:url},defaultTime:time in iso format} timestep is the FORECAST time/element of the url
+        getMapOverlayUrls()
+        .then((urlList) => {
+            //urlList structure is {layerName:{timesteps:{timestep(number):url},defaultTime:time in iso format}} timestep is the FORECAST time/element of the url
             // represented as a number in 3 hourly intervals 0 - 36 hours ahead from RUN query (DefaultTime)
             //layerNames are usually (or should be) :
             // Rainfall
@@ -41,7 +43,15 @@ import {useEffect,useState} from "react"
             // Pressure layer is structured differently, 
             // 0 - 72 hours in 12 hour intervals from RUN query (DefaultTime)
             // defaultTime is the start time of the sequence in iso format
-            console.log(JSON.stringify(urlList,null,1),"uris in weather map")
+         
+            // console.log(JSON.stringify(urlList,null,1),"url list in weather map")
+            downloadMapOverlays(urlList)
+            .then((uriList)=>{ 
+              console.log(JSON.stringify(uriList,null,1),"uri list in weather map")
+
+
+             })
+
           })
           .catch((err) => console.log(err));
       }

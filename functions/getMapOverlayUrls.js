@@ -1,8 +1,8 @@
 import { MET_API } from "@env";
-import * as FileSystem from "expo-file-system";
+
 import { getCapabilities } from "../met-office-api.js";
 
-export const getMapOverlayUris = async () => {
+export const getMapOverlayUrls = async () => {
   try {
     //get capability data from met office api
     const data = await getCapabilities();
