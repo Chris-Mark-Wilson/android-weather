@@ -3,7 +3,7 @@ import { useContext, useState, useEffect } from "react";
 
 import { LinearGradient } from "expo-linear-gradient";
 
-import { getCurrentWeather } from "../../weather-api";
+import { getCurrentWeather } from "../../open-meteo-api";
 import { getWeatherDescription } from "../../functions/getWeatherDescription";
 import { IconContext, VariablesContext } from "../../contexts/weatherContext";
 export const CurrentMain = ({location}) => {

@@ -1,0 +1,25 @@
+//use react-native-maps to display weather map
+
+//getter function creates 2d array or uri's for each image in set
+//get capabilities from weather api
+//remember to use the returned default time in the url
+//create 2d array to hold sets for each LayerName
+//iterate over capabilities object
+//for each Layers.Layer
+//create array to hold urls for each image in set
+//use Timesteps.@defaultTime to get default time
+//for each Timesteps.Timestep
+//generate url array for each image in the set
+//and push to array
+//push array to 2d array
+//return 2d array
+
+//download function takes an array of url's
+//create uri object to hold uris for each layer set
+//iterate over array downloading each image to filesystem
+//creating local uri for each image using timestamp and layername,
+//add local uri to object - key is layername
+//e.g. uri.layername.timestamp.png
+//return 2d array
+
+//display function takes uri object

@@ -2,8 +2,9 @@ import { FlatList, StyleSheet, View, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { getWeatherDescription } from "../../functions/getWeatherDescription";
 import { useState, useEffect, useRef,useContext } from "react";
-import { getHourlyWeather } from "../../weather-api";
+import { getHourlyWeather } from "../../open-meteo-api";
 import { IconContext } from "../../contexts/iconContext";
+import { WeatherMap } from "./weatherMap";
 
 
 export const HourlyScroll = ({ location,setLocation }) => {
@@ -12,7 +13,7 @@ export const HourlyScroll = ({ location,setLocation }) => {
   const { iconMap, SVG } = useContext(IconContext);
 
   useEffect(() => {
-    console.log(location,"in hourly scroll effect");
+    // console.log(location,"in hourly scroll effect");
 
     if (location.place) {
        
@@ -58,7 +59,7 @@ export const HourlyScroll = ({ location,setLocation }) => {
             };
           });
 
-    console.log(JSON.stringify(newData,null,1),"new data")
+    // console.log(JSON.stringify(newData,null,1),"new data")
           
             setHourlyData(newData);
       
@@ -66,7 +67,7 @@ export const HourlyScroll = ({ location,setLocation }) => {
         })
         .catch((e) => console.log(e, "error in hourly scroll catch"));
     }
-    console.log(JSON.stringify(hourlyData,null,1), "hourly data");
+    // console.log(JSON.stringify(hourlyData,null,1), "hourly data");
   }, [location]);
 
   useEffect(() => {
@@ -99,6 +100,7 @@ export const HourlyScroll = ({ location,setLocation }) => {
         }
         data={hourlyData}
         keyExtractor={(item) => item.time}
+        ListFooterComponent={<WeatherMap location={location}/>}
         renderItem={({ item, index }) => (
             
           <LinearGradient

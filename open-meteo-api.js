@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import {MET_API} from '@env';
 const BASE_URL='https://api.open-meteo.com/v1/forecast?'
 
 export const getCurrentWeather = async (location) => {  
@@ -37,3 +37,6 @@ export const getHourlyWeather = async (location,date=new Date().toISOString().sl
         return Promise.reject(error);
     }
 }
+
+
+

@@ -2,7 +2,7 @@ import React, { useEffect,useState,useContext,useRef } from 'react';
 import { StyleSheet, Text, View,FlatList } from 'react-native';
 import { LocationContext } from '../../contexts/locationContext';
 import { IconContext } from '../../contexts/weatherContext';
-import { getHourlyWeather } from '../../weather-api';
+import { getHourlyWeather } from '../../open-meteo-api';
 import { getWeatherDescription } from '../../functions/getWeatherDescription';
 import { LinearGradient } from 'expo-linear-gradient';
 import {Canvas, Path} from "@shopify/react-native-skia";

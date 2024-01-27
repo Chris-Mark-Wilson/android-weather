@@ -2,7 +2,7 @@ import React ,{useEffect,useContext}from 'react';
 import {LocationContext} from '../contexts/locationContext';
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
 
-import { getTomorrowsWeather } from '../weather-api';
+import { getTomorrowsWeather } from '../open-meteo-api';
 
 export  const Tomorrow = () => {
 
