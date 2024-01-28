@@ -1,11 +1,10 @@
-import { View, Text, StyleSheet,Image,Pressable} from "react-native"
-import { useWindowDimensions } from "react-native"
-import { getMapOverlayUrls } from "../../functions/getMapOverlayUrls"
+import { useContext, useEffect, useState } from "react"
+import { Image, StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from "react-native"
+import { IconContext } from "../../contexts/iconContext"
 import { downloadMapOverlays } from "../../functions/downloadMapOverlays"
-import {useEffect,useState,useContext} from "react"
-import { IconContext } from "../../contexts/iconContext";
+import { getMapOverlayUrls } from "../../functions/getMapOverlayUrls"
 
-import {API_KEY} from "@env"
+import { API_KEY } from "@env"
 
 
 
@@ -30,6 +29,9 @@ import {API_KEY} from "@env"
   const [count,setCount]=useState(0);//counter for timing sequence of images
   const interval=2000;
   const[displayTime,setDisplayTime]=useState(0);//time to display on screen
+  const [isCloud,setIsCloud]=useState(false);
+  const [isRain,setIsRain]=useState(false);
+  const [isTemp,setIsTemp]=useState(false);
  
     useEffect(() => {
       if (location.lat && location.lon) { 
@@ -123,15 +125,38 @@ import {API_KEY} from "@env"
 {/* style={{...styles.container,height:+`${layout.height}`}} */}
 
         {!isUK&&<Text>Not in uk no radar data available</Text>}
-           <Image style={{...styles.images}} source={{uri:uriList.Rainfall[offsetHours]}}/> 
+           {isRain&&!isCloud&&<Image style={{...styles.images}} source={{uri:uriList.Rainfall[offsetHours]}}/>}
+            {isCloud&&!isRain&&<Image style={{...styles.images}} source={{uri:uriList.Cloud[offsetHours]}}/>}
+            {isCloud&&isRain&&<Image style={{...styles.images}} source={{uri:uriList.CloudAndRain[offsetHours]}}/>}
+           {isTemp&&<Image style={{...styles.images}} source={{uri:uriList.Temperature[offsetHours]}}/>}
            <Image style={{...styles.map,width:layout.width}} source={{uri:staticMapUrl}}/>
+           
            <Text style={styles.time}> {displayTime} </Text>
 
-      <Pressable  onPress={()=>console.log("press")}>
-        <View style={{...styles.cloudIcon}}>
-        <SVG.cloud_icon />
+      <TouchableOpacity style={{...styles.cloudIcon,backgroundColor:isCloud?"green":"white"}} onPress={()=>{
+        if(isCloud){setIsCloud(false)} else{setIsCloud(true)}
+      }}>
+        <View >
+        <SVG.cloudy style={styles.cloudSize}/>
         </View>
-        </Pressable>
+        </TouchableOpacity>
+
+      <TouchableOpacity style={{...styles.rainIcon,backgroundColor:isRain?"green":"white"}} onPress={()=>{
+        if(isRain){setIsRain(false)} else{setIsRain(true)}
+      }}>
+        <View >
+        <SVG.rain style={styles.rainSize}/>
+        </View>
+        </TouchableOpacity>
+
+      <TouchableOpacity style={{...styles.tempIcon,backgroundColor:isTemp?"green":"white"}} onPress={()=>{
+        if(isTemp){setIsTemp(false)} else{setIsTemp(true)}
+      }}>
+        <View >
+     <Text style={styles.tempSize}>°C</Text>
+        </View>
+        </TouchableOpacity>
+
          </View>
     )
 }
@@ -168,10 +193,43 @@ const styles = StyleSheet.create({
       position:"absolute",
       top:10,
       right:20,
-      width:30,
-      height:30,
+      backgroundColor:"white",
+      borderRadius:50,
     
     },
+    cloudSize:{
+      width:50,
+      height:50,
+    },
+    rainIcon:{
+      zIndex:999,
+      position:"absolute",
+      top:70,
+      right:20,
+      backgroundColor:"white",
+      borderRadius:50,
+    },
+    rainSize:{
+      width:50,
+      height:50,
+    },
+    tempIcon:{
+      zIndex:999,
+      position:"absolute",
+      top:130,
+      right:20,
+      backgroundColor:"white",
+      borderRadius:50,
+      justifyContent:"center",
+    },
+    tempSize:{
+      left:20,
+      top:10,
+      width:50,
+      height:50,
+     fontSize:20,
+    },
+
     time:{
       zIndex:3,
        position:"absolute",

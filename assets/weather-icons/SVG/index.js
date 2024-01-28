@@ -16,4 +16,5 @@ export {default as rain_icon} from './rain_icon.svg'
 export {default as snow_icon} from './snow_icon.svg'
 export {default as snow_thunder} from './snow_thunder.svg'
 export {default as rain_thunder} from './rain_thunder.svg'
+export {default as cloudy} from './cloudy.svg'
 // exported svgs's as properties of SVG object
