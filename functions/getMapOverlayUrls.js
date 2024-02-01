@@ -6,7 +6,7 @@ export const getMapOverlayUrls = async () => {
   try {
     //get capability data from met office api
     const data = await getCapabilities();
-
+console.log(data,"data in getMapOverlayUrls")
     const urlList = {};
     const base_url = data.Layers.BaseUrl.$;
     const layers = data.Layers.Layer;
@@ -49,6 +49,6 @@ export const getMapOverlayUrls = async () => {
     return urlList;
   } catch (err) {
     console.log(err, "error in getMapOverlayUris");
-    return Promise.reject(err);
+    return Promise.reject(`${err}, error in getMapOverlayUris`);
   }
 };

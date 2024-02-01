@@ -1,8 +1,10 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect,useLayoutEffect, useState } from "react"
 import { Image, StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from "react-native"
-import { IconContext } from "../../contexts/iconContext"
-import { downloadMapOverlays } from "../../functions/downloadMapOverlays"
-import { getMapOverlayUrls } from "../../functions/getMapOverlayUrls"
+import { downloadMapOverlays } from "../functions/downloadMapOverlays"
+import { getMapOverlayUrls } from "../functions/getMapOverlayUrls"
+import {LocationContext} from "../contexts/locationContext"
+import { PlaybackControls } from "./components/playbackControls"
+import {FontAwesome5} from '@expo/vector-icons'
 
 import { API_KEY } from "@env"
 
@@ -15,29 +17,37 @@ import { API_KEY } from "@env"
 
 
 
- export const WeatherMap=({location})=>{
-  const staticMapUrl=`https://maps.googleapis.com/maps/api/staticmap?center=54.5,-3.5&markers=color:red|size:tiny|${location.lat},${location.lon}&scale=2&zoom=5&size=515x515&maptype=terrain&key=${API_KEY}`
 
-  const { SVG } = useContext(IconContext);
+ export const WeatherMap=()=>{
+   const {location}=useContext(LocationContext);
+   const mapUrl=`https://maps.googleapis.com/maps/api/staticmap?center=54.5,-3.5&markers=color:red|size:small|${location.lat},${location.lon}&scale=1&zoom=5&size=400x400&maptype=terrain&key=${API_KEY}`
+  const [staticMapUrl,setStaticMapUrl]=useState(mapUrl)
 
   const [isUK,setIsUK]=useState(false);
-
+  const [isPlaying,setIsPlaying]=useState(true);
+  const layout = useWindowDimensions();
   const [uriList,setUriList]=useState({});
   const [isLoading,setIsLoading]=useState(true);
   const [defaultTimes,setDefaultTimes]=useState({});//default times for each layer
   const [offsetHours,setOffsetHours]=useState(0);//offset hours for each layer
   const [count,setCount]=useState(0);//counter for timing sequence of images
-  const interval=2000;
+  const interval=2000;//interval between images in milliseconds
   const[displayTime,setDisplayTime]=useState(0);//time to display on screen
-  const [isCloud,setIsCloud]=useState(false);
-  const [isRain,setIsRain]=useState(false);
-  const [isTemp,setIsTemp]=useState(false);
+  const [isCloud,setIsCloud]=useState(false);//show cloud layer
+  const [isRain,setIsRain]=useState(true);//show rain layer
+  const [isTemp,setIsTemp]=useState(false);//show temp layer
+  const [attempts,setAttempts]=useState(0)
+
+
+
  
     useEffect(() => {
       if (location.lat && location.lon) { 
+        setStaticMapUrl(`https://maps.googleapis.com/maps/api/staticmap?center=54.5,-3.5&markers=color:red|size:small|${location.lat},${location.lon}&scale=1&zoom=5&size=400x400&maptype=terrain&key=${API_KEY}`)
         // console.log(location.lat,"location lat in weather map")
         if (location.lat > 48 && location.lat < 61 && location.lon > -12 && location.lon < 5) {
           setIsUK(true);
+     
         }
         else {
           setIsUK(false);
@@ -70,7 +80,8 @@ import { API_KEY } from "@env"
 
             // console.log(JSON.stringify(defaultTimes,null,1),"default times in weather map")
             const hours=3*60*60*1000;//3 hours in milliseconds
-            console.log(new Date(defaultTimes.Rainfall).toLocaleTimeString('en-US',{hour12:true}),"default time in weather map")
+           
+            // alert(`${JSON.stringify(urlList,null,1)} `)
 
             downloadMapOverlays(urlList)
             .then((uriList)=>{ 
@@ -85,22 +96,33 @@ import { API_KEY } from "@env"
              })
 
           })
-          .catch((err) => console.log(err, "error in weather map"));
+          .catch((err) => {
+            console.log(err, "error in weather map");
+            alert(`${err} error fetching data, attempt ${attempts}`)
+            //kick server till it works..
+            if(attempts<3){
+              
+              setIsUK(false);
+              setIsUK(true);
+              setAttempts((attempts)=>attempts+1)
+            }
+          })
       }
     }, [isUK]);
 
     useEffect(()=>{
-      if(!isLoading){
-        setTimeout(()=>{
+      if(!isLoading&&isPlaying){
+     setTimeout(()=>{
           setOffsetHours((prev)=>{
             if(prev===36) return 0
             else return prev+3
           });
           setCount((count)=>count+1);
+           
         },interval)
       }
-
-    },[count,isLoading])
+    
+    },[count,isLoading,isPlaying])
 
     useEffect(()=>{
       setDisplayTime(()=>{
@@ -115,10 +137,12 @@ import { API_KEY } from "@env"
 
 
 
-    const layout = useWindowDimensions();
+
+
+  
     // console.log(layout.height,"layout height in weather map")
 
-    return isLoading?<Text>loading</Text>:
+    return isLoading?<Text>loading radar data...</Text>:
     (
         <View style={{flex:1,height:500}}>
 
@@ -129,33 +153,48 @@ import { API_KEY } from "@env"
             {isCloud&&!isRain&&<Image style={{...styles.images}} source={{uri:uriList.Cloud[offsetHours]}}/>}
             {isCloud&&isRain&&<Image style={{...styles.images}} source={{uri:uriList.CloudAndRain[offsetHours]}}/>}
            {isTemp&&<Image style={{...styles.images}} source={{uri:uriList.Temperature[offsetHours]}}/>}
-           <Image style={{...styles.map,width:layout.width}} source={{uri:staticMapUrl}}/>
+           <Image style={{...styles.map}} source={{uri:staticMapUrl}}/>
            
            <Text style={styles.time}> {displayTime} </Text>
 
-      <TouchableOpacity style={{...styles.cloudIcon,backgroundColor:isCloud?"green":"white"}} onPress={()=>{
+      <TouchableOpacity style={{...styles.cloudIcon,backgroundColor:isCloud?"lightgreen":"white"}} onPress={()=>{
         if(isCloud){setIsCloud(false)} else{setIsCloud(true)}
       }}>
         <View >
-        <SVG.cloudy style={styles.cloudSize}/>
+       <FontAwesome5 name="cloud" style={styles.cloudSize}/>
         </View>
         </TouchableOpacity>
 
-      <TouchableOpacity style={{...styles.rainIcon,backgroundColor:isRain?"green":"white"}} onPress={()=>{
+      <TouchableOpacity style={{...styles.rainIcon,backgroundColor:isRain?"lightgreen":"white"}} onPress={()=>{
         if(isRain){setIsRain(false)} else{setIsRain(true)}
       }}>
         <View >
-        <SVG.rain style={styles.rainSize}/>
+      <FontAwesome5 name="cloud-rain" style={styles.rainSize}/>
         </View>
         </TouchableOpacity>
 
-      <TouchableOpacity style={{...styles.tempIcon,backgroundColor:isTemp?"green":"white"}} onPress={()=>{
+      <TouchableOpacity style={{...styles.tempIcon,backgroundColor:isTemp?"lightgreen":"white"}} onPress={()=>{
         if(isTemp){setIsTemp(false)} else{setIsTemp(true)}
       }}>
         <View >
-     <Text style={styles.tempSize}>°C</Text>
+     <FontAwesome5 name="temperature-high" style={styles.tempSize}/>
         </View>
         </TouchableOpacity>
+
+        <View style={styles.controls}>
+          <PlaybackControls 
+          onFFPressed={()=>{setOffsetHours((prev)=>{return prev===36?0:prev+3})}} 
+          onRWPressed={()=>{setOffsetHours((prev)=>{return prev===0?36:prev-3})}}
+          onPausePressed={()=>{
+            setIsPlaying(false)
+            setOffsetHours((prev)=>{return prev===0?36:prev-3})}}
+          onPlayPressed={()=>{setIsPlaying(true)}}
+          size={25}
+          color="green"
+          inactivebackgroundColor="white"
+          activeBackgroundcolour="lightgray"
+          />
+          </View>
 
          </View>
     )
@@ -169,24 +208,29 @@ const styles = StyleSheet.create({
       
     },
     map:{
+      resizeMode:"contain",
       position:"absolute",
       zIndex:-1,
-      height:550,
-  
+      height:"100%",
+  width:"100%"
       
     },
     images:{
+      // objectFit:"scale-down",
       position:"absolute",
       opacity:0.5,
       zIndex:2,
        width:"100%",
-       height:500,
+       top:"25%",
+       height:"50%",
         borderWidth:1,
         borderColor:"red",
-        paddingLeft:"15",
+        paddingLeft:30,
         paddingRight:"15",
+        paddingBottom:30,
         // marginLeft:"15%",
         // marginRight:"15%",
+        marginBottom:"10%"
     },
     cloudIcon:{
       zIndex:999,
@@ -198,8 +242,11 @@ const styles = StyleSheet.create({
     
     },
     cloudSize:{
-      width:50,
-      height:50,
+      left:7,
+      top:8,
+  width:50,
+  height:50,
+ fontSize:30,
     },
     rainIcon:{
       zIndex:999,
@@ -210,8 +257,11 @@ const styles = StyleSheet.create({
       borderRadius:50,
     },
     rainSize:{
-      width:50,
-      height:50,
+      left:10,
+      top:10,
+  width:50,
+  height:50,
+ fontSize:30,
     },
     tempIcon:{
       zIndex:999,
@@ -220,22 +270,33 @@ const styles = StyleSheet.create({
       right:20,
       backgroundColor:"white",
       borderRadius:50,
-      justifyContent:"center",
+      // justifyContent:"center",
     },
     tempSize:{
-      left:20,
-      top:10,
+          left:15,
+          top:10,
       width:50,
       height:50,
-     fontSize:20,
+     fontSize:30,
     },
 
     time:{
       zIndex:3,
        position:"absolute",
        backgroundColor:"white",
-       fontSize:16,
-       bottom:20,
+       fontSize:18,
+       top:20,
         left:20, 
+        width:"60%",
+        borderWidth:1,
+        borderRadius:5
+    },
+    controls:{
+      position:"absolute",
+      bottom:50,
+    left:20,
+      width:"70%",
+      height:"7%",
+      zIndex:999,
     }
 })

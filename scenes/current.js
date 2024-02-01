@@ -38,7 +38,7 @@ useEffect(() => {
       <LocationFinder location={location} setLocation={setLocation}/>
       {/* <CurrentMain location={location}/>
       <Details location={location}/> */}
-      <HourlyScroll location={location} setLocation={setLocation} />
+      <HourlyScroll location={location} />
       <StatusBar style="auto" />
     </View>
   );

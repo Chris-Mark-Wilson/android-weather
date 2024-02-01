@@ -4,10 +4,10 @@ import { getWeatherDescription } from "../../functions/getWeatherDescription";
 import { useState, useEffect, useRef,useContext } from "react";
 import { getHourlyWeather } from "../../open-meteo-api";
 import { IconContext } from "../../contexts/iconContext";
-import { WeatherMap } from "./weatherMap";
 
 
-export const HourlyScroll = ({ location,setLocation }) => {
+
+export const HourlyScroll = ({ location,date }) => {
   const [hourlyData, setHourlyData] = useState([]);
   const flatListRef = useRef(null);
   const { iconMap, SVG } = useContext(IconContext);
@@ -17,7 +17,7 @@ export const HourlyScroll = ({ location,setLocation }) => {
 
     if (location.place) {
        
-      getHourlyWeather(location)
+      getHourlyWeather(location,date)
         .then((data) => {
         
           const { hourly } = data;
@@ -100,7 +100,7 @@ export const HourlyScroll = ({ location,setLocation }) => {
         }
         data={hourlyData}
         keyExtractor={(item) => item.time}
-        ListFooterComponent={<WeatherMap location={location}/>}
+     
         renderItem={({ item, index }) => (
             
           <LinearGradient

@@ -9,10 +9,20 @@ export const downloadMapOverlays = async (urlList) => {
      for(let layerName in urlList){
             uriList[layerName]={};
             for(let timestep in urlList[layerName].timesteps){
-                const uri = await FileSystem.downloadAsync(urlList[layerName].timesteps[timestep],FileSystem.documentDirectory+`${layerName}_${timestep}.png`);
+                try{
+                    // again using proxy to get round the http problem
+                    //encodeURIComponent ensures the incoming url with its own query string is not truncated
+                    // console.log(urlList[layerName].timesteps[timestep],"url in downloadMapOverlays")
+                const uri = await FileSystem.downloadAsync(`https://met-office-api-proxy.onrender.com/png?url=${encodeURIComponent(urlList[layerName].timesteps[timestep])}`,FileSystem.documentDirectory+`${layerName}_${timestep}.png`);
                 uriList[layerName][timestep]=uri.uri;
+                }
+                catch(error){
+                    console.log(error,"error in downloadMapOverlays");
+                    return Promise.reject(`${error} error from downloadMapOverlays`);
+                }
             }
         }
         return uriList;
+        //downloads all the radar overlays.png and saves to local file system indexed by layer name and timestep, returns list of file system uris
 
 }

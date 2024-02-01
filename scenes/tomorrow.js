@@ -1,25 +1,20 @@
 import React ,{useEffect,useContext}from 'react';
 import {LocationContext} from '../contexts/locationContext';
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
-
-import { getTomorrowsWeather } from '../open-meteo-api';
+import { HourlyScroll } from './components/hourlyScroll';
 
 export  const Tomorrow = () => {
 
   const { location } = useContext(LocationContext);
 
-  useEffect(() => {
+  
  
-  //   if(location.lat){
-  //   getTomorrowsWeather(location)
-  //   .then((data) => {
-  //     console.log(JSON.stringify(data, null, 2),"tomorrow");
-  //   })
-  //   .catch((error) => {
-  //     console.log(error, "error in tomorrow.js");
-  //   });
-  // }
-    },[location]);
+
+
+      const date=new Date().toISOString().slice(0,10);
+      console.log(date,"date in tomorrow")
+  
+
 
 
     return (
@@ -29,9 +24,9 @@ export  const Tomorrow = () => {
           <View style={styles.dailyWeather}>  
             <Text>Tomorrows Weather</Text>
           </View>
-          <View style={styles.details}> 
-            <Text>Details</Text>
-          </View>
+      
+            <HourlyScroll location={location} date={date}/>
+         
         <StatusBar style="auto" />
         </View>
        

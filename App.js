@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Current } from "./scenes/current";
 import { Tomorrow } from "./scenes/tomorrow";
 import { SevenDays } from "./scenes/sevenDays";
+import { WeatherMap } from "./scenes/weatherMap";
 import { LocationProvider } from "./contexts/locationContext";
 import { IconProvider } from "./contexts/iconContext";
 import { useWindowDimensions, View} from "react-native";
@@ -12,6 +13,7 @@ import { SevenDaysProvider, VariablesProvider } from "./contexts/weatherContext"
 const renderScene = SceneMap({
   current: Current,
   tomorrow: Tomorrow,
+  weatherMap:WeatherMap,
   sevenDays: SevenDays,
 });
 
@@ -22,6 +24,7 @@ export default function App() {
   const [routes] = useState([
     { key: "current", title: "Today" },
     { key: "tomorrow", title: "Tomorrow" },
+    {key:"weatherMap",title:"UK Radar"},
     { key: "sevenDays", title: "7 Days" },
   ]);
   return (
