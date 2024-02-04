@@ -1,10 +1,11 @@
-import { useContext, useEffect,useLayoutEffect, useState } from "react"
+import { useContext, useEffect,useLayoutEffect, useState,useRef } from "react"
 import { Image, StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from "react-native"
 import { downloadMapOverlays } from "../functions/downloadMapOverlays"
 import { getMapOverlayUrls } from "../functions/getMapOverlayUrls"
 import {LocationContext} from "../contexts/locationContext"
 import { PlaybackControls } from "./components/playbackControls"
 import {FontAwesome5} from '@expo/vector-icons'
+import MapView  ,{PROVIDER_GOOGLE}from "react-native-maps"
 
 import { API_KEY } from "@env"
 
@@ -21,7 +22,8 @@ import { API_KEY } from "@env"
  export const WeatherMap=()=>{
    const {location}=useContext(LocationContext);
    const mapUrl=`https://maps.googleapis.com/maps/api/staticmap?center=54.5,-3.5&markers=color:red|size:small|${location.lat},${location.lon}&scale=1&zoom=5&size=400x400&maptype=terrain&key=${API_KEY}`
-  const [staticMapUrl,setStaticMapUrl]=useState(mapUrl)
+  const [staticMapUrl,setStaticMapUrl]=useState("");
+  const mapRef=useRef(null)
 
   const [isUK,setIsUK]=useState(false);
   const [isPlaying,setIsPlaying]=useState(true);
@@ -135,7 +137,11 @@ import { API_KEY } from "@env"
       }
     },[offsetHours])
 
-
+useEffect(()=>{
+  if(mapRef.current){
+mapRef.current.setMapBoundaries({latitude: 48, longitude: -12}, {latitude: 61, longitude: 5})
+  }
+},[mapRef.current])
 
 
 
@@ -144,16 +150,26 @@ import { API_KEY } from "@env"
 
     return isLoading?<Text>loading radar data...</Text>:
     (
-        <View style={{flex:1,height:500}}>
+        <View style={{flex:1}}>
+<MapView style={styles.mapview}
 
-{/* style={{...styles.container,height:+`${layout.height}`}} */}
 
+ref={mapRef}
+initialRegion={{
+  latitude: location.lat,
+  longitude: location.lon,
+  latitudeDelta: 0.0922,
+  longitudeDelta: 0.0421,
+}} 
+/>
+
+{/* overlays */}
         {!isUK&&<Text>Not in uk no radar data available</Text>}
            {isRain&&!isCloud&&<Image style={{...styles.images}} source={{uri:uriList.Rainfall[offsetHours]}}/>}
             {isCloud&&!isRain&&<Image style={{...styles.images}} source={{uri:uriList.Cloud[offsetHours]}}/>}
             {isCloud&&isRain&&<Image style={{...styles.images}} source={{uri:uriList.CloudAndRain[offsetHours]}}/>}
-           {isTemp&&<Image style={{...styles.images}} source={{uri:uriList.Temperature[offsetHours]}}/>}
-           <Image style={{...styles.map}} source={{uri:staticMapUrl}}/>
+           {isTemp&&<Image style={{...styles.images}} source={{uri:uriList.Temperature[offsetHours]}}/>} 
+           {/* <Image style={{...styles.map}} source={{uri:staticMapUrl}}/> */}
            
            <Text style={styles.time}> {displayTime} </Text>
 
@@ -206,6 +222,17 @@ const styles = StyleSheet.create({
         backgroundColor:"lightblue",
       
       
+    },
+    mapview:{
+      flex:1,
+      position:"absolute",
+      // zIndex:-1,
+      width:"100%",
+      height:"100%",
+      top:0,
+      left:0,
+      right:0,
+      bottom:0
     },
     map:{
       resizeMode:"contain",

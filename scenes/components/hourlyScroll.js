@@ -150,15 +150,22 @@ export const HourlyScroll = ({ location,date }) => {
   );
 };
 const styles = StyleSheet.create({
-  container: {
-    //dont mess with this
-    position:"absolute",
-    top:"10%",
-    height:"90%",
-    width: "100%",
-    padding: 0,
-    margin: 0,
+  // container: {
+  //   //dont mess with this
+  //   position:"absolute",
+  //   top:"10%",
+  //   height:"90%",
+  //   width: "100%",
+  //   padding: 0,
+  //   margin: 0,
+  // },
+  container:{
+    flex:1,
+    width:"100%",
+    height:"100%",
+    backgroundColor:"white"
   },
+  
   place:{
    
     height:30,

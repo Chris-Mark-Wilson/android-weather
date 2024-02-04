@@ -36,9 +36,9 @@ useEffect(() => {
   return (
     <View style={styles.container}>
       <LocationFinder location={location} setLocation={setLocation}/>
-      {/* <CurrentMain location={location}/>
-      <Details location={location}/> */}
+    <View style={styles.hourlyScrollContainer}>
       <HourlyScroll location={location} />
+      </View>
       <StatusBar style="auto" />
     </View>
   );
@@ -51,7 +51,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
+hourlyScrollContainer:{
+     //dont mess with this
+     position:"absolute",
+     top:"10%",
+     height:"90%",
+     width: "100%",
+     padding: 0,
+     margin: 0,
+}
 
  
 });
