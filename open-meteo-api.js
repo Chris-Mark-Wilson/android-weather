@@ -38,5 +38,16 @@ export const getHourlyWeather = async (location,date=new Date().toISOString().sl
     }
 }
 
+export const getSevenDayForecast = async (location) => {
+    try{
+        const response = await axios.get(`${BASE_URL}latitude=${location.lat}&longitude=${location.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,precipitation_probability_max`)
+               return response.data;
+    }
+    catch (error){
+        console.log(error,"error in seven day api");
+        return Promise.reject(error);
+    }
+}
+
 
 

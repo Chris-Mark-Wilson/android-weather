@@ -13,8 +13,8 @@ export const getCapabilities = async () => {
     try{
         //use proxy server to get around http met url issue
     const response = await axios.get(`https://met-office-api-proxy.onrender.com/proxy?url=${url}`);
-    alert(`${url},${JSON.stringify(response.data,null,1)}`)
-    console.log(JSON.stringify(response.data,null,1),"response data in weather map api")
+    // alert(`${url},${JSON.stringify(response.data,null,1)}`)
+    // console.log(JSON.stringify(response.data,null,1),"response data in weather map api")
     return response.data;
     }
     catch (error){

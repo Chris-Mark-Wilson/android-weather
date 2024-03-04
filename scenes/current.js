@@ -12,7 +12,7 @@ export const Current = () => {
   const {location,setLocation}=useContext(LocationContext);
 
 useEffect(() => {
-  console.log("getting location in current.js",location)
+
   if(!location.place){
   getCurrentLocation()
   .then((location)=>{

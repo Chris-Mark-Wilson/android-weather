@@ -15,7 +15,7 @@ export  const Tomorrow = () => {
       date.setDate(date.getDate() + 1);
   
       const tomorrow=date.toISOString().slice(0,10);
-      console.log(tomorrow,"date in tomorrow")
+
   
 
 

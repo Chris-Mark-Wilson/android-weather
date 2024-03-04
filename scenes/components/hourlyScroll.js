@@ -59,7 +59,7 @@ export const HourlyScroll = ({ location,date }) => {
             };
           });
 
-    // console.log(JSON.stringify(newData,null,1),"new data")
+
           
             setHourlyData(newData);
       

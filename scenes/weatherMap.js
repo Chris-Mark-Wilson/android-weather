@@ -1,5 +1,5 @@
 import { useContext, useEffect,useLayoutEffect, useState,useRef } from "react"
-import { Image, StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from "react-native"
+import { Image, StyleSheet, Text, TouchableOpacity, View, useWindowDimensions ,ActivityIndicator} from "react-native"
 import { downloadMapOverlays } from "../functions/downloadMapOverlays"
 import { getMapOverlayUrls } from "../functions/getMapOverlayUrls"
 import {LocationContext} from "../contexts/locationContext"
@@ -21,7 +21,7 @@ import { API_KEY } from "@env"
 
  export const WeatherMap=()=>{
    const {location}=useContext(LocationContext);
-   const mapUrl=`https://maps.googleapis.com/maps/api/staticmap?center=54.5,-3.5&markers=color:red|size:small|${location.lat},${location.lon}&scale=1&zoom=5&size=400x400&maptype=terrain&key=${API_KEY}`
+   const mapUrl=`https://maps.googleapis.com/maps/api/staticmap?center=54.5,-3.5&markers=color:red|size:small|${location.lat},${location.lon}&scale=1&zoom=2&size=400x400&maptype=terrain&key=${API_KEY}`
   const [staticMapUrl,setStaticMapUrl]=useState("");
   const mapRef=useRef(null)
 
@@ -39,7 +39,8 @@ import { API_KEY } from "@env"
   const [isRain,setIsRain]=useState(true);//show rain layer
   const [isTemp,setIsTemp]=useState(false);//show temp layer
   const [attempts,setAttempts]=useState(0)
-
+  const [gotList,setGotList]=useState(false);
+ 
 
 
  
@@ -84,6 +85,7 @@ import { API_KEY } from "@env"
             const hours=3*60*60*1000;//3 hours in milliseconds
            
             // alert(`${JSON.stringify(urlList,null,1)} `)
+            setGotList(true);
 
             downloadMapOverlays(urlList)
             .then((uriList)=>{ 
@@ -148,10 +150,14 @@ mapRef.current.setMapBoundaries({latitude: 48, longitude: -12}, {latitude: 61, l
   
     // console.log(layout.height,"layout height in weather map")
 
-    return isLoading?<Text>loading radar data...</Text>:
+    return isLoading?
+    <View style={styles.container}>
+    <ActivityIndicator size="large" color={gotList?"green":'red'}/>
+    <Text>{gotList?'Loading Radar Data...':'Contacting Met Office Server'}</Text>
+    </View>:
     (
         <View style={{flex:1}}>
-<MapView style={styles.mapview}
+{/* <MapView style={styles.mapview}
 
 
 ref={mapRef}
@@ -161,7 +167,7 @@ initialRegion={{
   latitudeDelta: 0.0922,
   longitudeDelta: 0.0421,
 }} 
-/>
+/> */}
 
 {/* overlays */}
         {!isUK&&<Text>Not in uk no radar data available</Text>}
@@ -169,9 +175,9 @@ initialRegion={{
             {isCloud&&!isRain&&<Image style={{...styles.images}} source={{uri:uriList.Cloud[offsetHours]}}/>}
             {isCloud&&isRain&&<Image style={{...styles.images}} source={{uri:uriList.CloudAndRain[offsetHours]}}/>}
            {isTemp&&<Image style={{...styles.images}} source={{uri:uriList.Temperature[offsetHours]}}/>} 
-           {/* <Image style={{...styles.map}} source={{uri:staticMapUrl}}/> */}
+           <Image style={{...styles.map}} source={{uri:staticMapUrl}}/>
            
-           <Text style={styles.time}> {displayTime} </Text>
+           <Text style={styles.time}> {displayTime!='invalid date'?displayTime:'setting time'} </Text>
 
       <TouchableOpacity style={{...styles.cloudIcon,backgroundColor:isCloud?"lightgreen":"white"}} onPress={()=>{
         if(isCloud){setIsCloud(false)} else{setIsCloud(true)}
@@ -220,6 +226,8 @@ const styles = StyleSheet.create({
     container:{
       flex:1,
         backgroundColor:"lightblue",
+        alignItems:"center",
+        justifyContent:"center",
       
       
     },
