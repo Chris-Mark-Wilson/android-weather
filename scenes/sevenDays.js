@@ -1,137 +1,237 @@
-import React,{useEffect,useState,useContext} from 'react';
-import { StyleSheet, Text, View, Button, StatusBar,FlatList } from 'react-native';
-import { getSevenDayForecast } from '../open-meteo-api';
-import { LocationContext } from '../contexts/locationContext';
+import React, { useEffect, useState, useContext } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  StatusBar,
+  FlatList,
+  Alert,
+  Modal,
+} from "react-native";
+import { getSevenDayForecast, getHourlyWeather } from "../open-meteo-api";
+import { LocationContext } from "../contexts/locationContext";
 import { IconContext } from "../contexts/iconContext";
-import { getWeatherDescription } from '../functions/getWeatherDescription';
+import { getWeatherDescription } from "../functions/getWeatherDescription";
+import { Details } from "./components/detailsGraph";
 
-export  const SevenDays = () => {
+export const SevenDays = () => {
   const [sevenDayForecast, setSevenDayForecast] = useState([]);
-  const {location} = useContext(LocationContext);
+  const [showModal, setShowModal] = useState(false);
+  const [modalData, setModalData] = useState([]);
+  const { location } = useContext(LocationContext);
+  const [modalDate, setModalDate] = useState(null);
 
   const { iconMap, SVG } = useContext(IconContext);
 
   useEffect(() => {
-    if(location.place){
-    getSevenDayForecast(location).then((response) => {
-     
-      const data=response.daily
-      const maxTemp=[...data.apparent_temperature_max]
-      const newSevenDayForecast = maxTemp.map((appTempMax,index) => {
-        return {
-          Icon:iconMap[
-            getWeatherDescription(
-              data.weather_code[index],
-              true
-            )[0]
-          ],
-          feelsMax:appTempMax,
-          feelsMin:data.apparent_temperature_min[index],
-          rain:data.precipitation_probability_max[index],
-          actualMax:data.temperature_2m_max[index],
-          actualMin:data.temperature_2m_min[index],
-          date:data.time[index],
-          weatherDescription:getWeatherDescription(data.weather_code[index],true)[0]
-        }
-      })
-      setSevenDayForecast(()=>[...newSevenDayForecast])
-//{"apparent_temperature_max": [7.4, 7.2, 8.4, 7.5, 6.3, 6.5, 6.8], "apparent_temperature_min": [-4.5, 0.8, -3.4, -1.3, 0.3, 0, 0.8], "precipitation_probability_max": [30, 42, 16, 13, 7, 39, 32], "temperature_2m_max": [10.6, 10.3, 11.5, 11.1, 10, 10.4, 10.5], "temperature_2m_min": [-1.6, 3.1, -1, 1.1, 3.3, 3, 3.7], "time": ["2024-03-04", "2024-03-05", "2024-03-06", "2024-03-07", "2024-03-08", "2024-03-09", "2024-03-10"], "weather_code": [45, 61, 45, 45, 3, 3, 3]} 
+    if (location.place) {
+      getSevenDayForecast(location)
+        .then((response) => {
+          const data = response.daily;
+          const maxTemp = [...data.apparent_temperature_max];
+          const newSevenDayForecast = maxTemp.map((appTempMax, index) => {
+            return {
+              Icon: iconMap[
+                getWeatherDescription(data.weather_code[index], true)[0]
+              ],
+              feelsMax: appTempMax,
+              feelsMin: data.apparent_temperature_min[index],
+              rain: data.precipitation_probability_max[index],
+              actualMax: data.temperature_2m_max[index],
+              actualMin: data.temperature_2m_min[index],
+              date: data.time[index],
+              weatherDescription: getWeatherDescription(
+                data.weather_code[index],
+                true
+              )[0],
+            };
+          });
+          setSevenDayForecast(() => [...newSevenDayForecast]);
+          //{"apparent_temperature_max": [7.4, 7.2, 8.4, 7.5, 6.3, 6.5, 6.8], "apparent_temperature_min": [-4.5, 0.8, -3.4, -1.3, 0.3, 0, 0.8], "precipitation_probability_max": [30, 42, 16, 13, 7, 39, 32], "temperature_2m_max": [10.6, 10.3, 11.5, 11.1, 10, 10.4, 10.5], "temperature_2m_min": [-1.6, 3.1, -1, 1.1, 3.3, 3, 3.7], "time": ["2024-03-04", "2024-03-05", "2024-03-06", "2024-03-07", "2024-03-08", "2024-03-09", "2024-03-10"], "weather_code": [45, 61, 45, 45, 3, 3, 3]}
+        })
 
- 
-    })
-  
-    .catch((error) => {
-      console.log(error);
-    });
-  }
-    },[location]);
-    return (
-    
-        <View style={styles.container}>
-      
-          <View style={styles.title}>  
-            <Text style={styles.titleText}>7 Day Forecast</Text>
-          </View>
-        <FlatList
-      
-        
-          data={sevenDayForecast}
-          renderItem={({item}) => {
-            return (
-              <View style={styles.listItem}>
-                <View style={styles.icon}>
-                <item.Icon />
-                </View>
-                <Text style={styles.listText}>{new Date(item.date).toDateString().split(' ')[0]}</Text>
-                <Text style={styles.listText}>Max temp: {item.actualMax} °C</Text>
-                <Text style={styles.listText}>Min temp: {item.actualMin} °C</Text>
-                {/* <Text>Feels like max: {item.feelsMax}</Text>
-                <Text>Feels like min: {item.feelsMin}</Text> */}
-                <Text style={styles.listText}>Chance of precipitation: {item.rain}%</Text>
-                <Text style={{fontSize:20,position:'absolute',top:0,right:10}}>{item.weatherDescription}</Text>
-              </View>
-            )
-          }}
-          keyExtractor={(item) => item.date}
-        />
-        <StatusBar style="auto" />
-        </View>
-       
-    );
+        .catch((error) => {
+          console.log(error);
+        });
     }
-    
-    const styles = StyleSheet.create({
-        container: {
-          flex: 1,
-          width:'100%',
-          height:'100%',
-          backgroundColor: '#fff',
-     
-        },
-        title:{
-          width:'100%',
-         justifyContent:'center',
-         alignItems:'center',
-          borderWidth:1,
+  }, [location]);
 
-        },
-        titleText:{
-          fontSize:20,
-          padding:5
-        },
-        listText:{
-          fontSize:20
-        },
-   
-        listItem: {
-         flex:1,
-          backgroundColor:"lightblue",
-          alignItems: 'flexStart',
-          justifyContent: 'center',
-          width:"100%",
-          borderWidth:1,
-        },
-        icon:{
-          position:"absolute",
-          top:30,
-          right:100,
-          width:"15%",
-          height:"45%",
-          backgroundColor:'blue',
-          paddingBottom:10,
-          marginLeft:-10,
-          marginRight:"auto",
-          borderWidth:1,
-          borderColor:'black',
-          borderRadius:50,
-          overflow:'hidden'
-        },
-        details: {
-          flex:0.25,
-          backgroundColor:"green",
-          alignItems: 'center',
-          justifyContent: 'center',
-          width:"100%",
+  const handlePressed = async (date) => {
+    console.log(date);
+    const response = await getHourlyWeather(location, date);
+    const data = response.hourly;
+    const hourlyArray = data.time.map((element, index) => {
+      return {
+        time: new Date(element).toLocaleTimeString("en-US", {
+          hour: "numeric",
+        }),
+        feelsLike: data.apparent_temperature[index],
+      };
+    });
+    setModalData(() => hourlyArray);
+    setModalDate(() => date);
+    setShowModal(true);
+  };
+  //{"apparent_temperature": [1.3, 0.8, 0.4, 0.2, 0.4, 1.1, 1.3, 1.3, 2.1, 3.8, 5.2, 6.1, 6.8, 7.1, 7.2, 6.8, 6, 5.2, 4.3, 3, 1.6, 1, 0.4, -0.2], "cloud_cover": [3, 25, 43, 43, 96, 100, 70, 66, 46, 58, 19, 77, 80, 81, 87, 77, 73, 62, 66, 38, 46, 46, 24, 29], "is_day": [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], "precipitation_probability": [0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 6, 10, 13, 12, 11, 10, 7, 3, 0, 0, 0, 0, 0, 0], "relative_humidity_2m": [96, 97, 97, 97, 98, 97, 98, 97, 96, 90, 83, 74, 69, 64, 64, 65, 74, 75, 80, 85, 88, 90, 93, 94], "temperature_2m": [3.8, 3.3, 3, 2.7, 2.8, 3.3, 3.7, 3.9, 4.5, 6.1, 7.9, 9.6, 10.4, 10.9, 10.9, 10.7, 9.9, 8.8, 7.6, 6.2, 4.9, 4.1, 3.3, 2.7], "time": ["2024-03-07T00:00", "2024-03-07T01:00", "2024-03-07T02:00", "2024-03-07T03:00", "2024-03-07T04:00", "2024-03-07T05:00", "2024-03-07T06:00", "2024-03-07T07:00", "2024-03-07T08:00", "2024-03-07T09:00", "2024-03-07T10:00", "2024-03-07T11:00", "2024-03-07T12:00", "2024-03-07T13:00", "2024-03-07T14:00", "2024-03-07T15:00", "2024-03-07T16:00", "2024-03-07T17:00", "2024-03-07T18:00", "2024-03-07T19:00", "2024-03-07T20:00", "2024-03-07T21:00", "2024-03-07T22:00", "2024-03-07T23:00"], "weather_code": [1, 1, 2, 2, 3, 3, 2, 2, 2, 2, 1, 2, 2, 3, 3, 3, 2, 2, 2, 1, 2, 2, 1, 1], "wind_speed_10m": [3.8, 3.5, 3.8, 3.2, 3.1, 2.3, 3.4, 4.5, 4, 4.5, 6.4, 9.8, 10, 10.2, 10.3, 11.1, 11.5, 9.9, 8.1, 7.5, 7.2, 5.9, 4.9, 4.6]}
 
-        },
-      });
+  return (
+    <View style={styles.container}>
+      <View style={styles.title}>
+        <Text style={styles.titleText}>7 Day Forecast</Text>
+      </View>
+
+      <Modal
+        animationType="fade" //,slide on none
+        transparent={true}
+        visible={showModal}
+        onRequestClose={() => setShowModal(!showModal)}
+      >
+        {/* <View style={styles.modal}>
+             
+                <FlatList
+                data={modalData}
+                keyExtractor={(item) => item.time}
+                renderItem={({item})=>{
+                  return(
+                    <Pressable onPress={()=>setShowModal(false)}
+                    style={styles.modalListItem}>
+               
+                    <Text>{item.time}</Text>
+                    <Text>{item.feelsLike}</Text>
+                   
+                    </Pressable>
+                  )
+                }}
+                />
+          <Text>MODAL SHOWING</Text>
+          
+          
+          </View> */}
+        <Details location={location} date={modalDate} />
+        <Pressable
+          onPress={() => setShowModal(false)}
+          style={styles.modalListItem}
+        >
+          <Text
+            style={{
+              width: "100%",
+              backgroundColor: "black",
+              color: "white",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            Back
+          </Text>
+        </Pressable>
+      </Modal>
+
+      <FlatList
+        data={sevenDayForecast}
+        renderItem={({ item }) => {
+          return (
+            <Pressable
+              style={styles.listItem}
+              onPress={() => handlePressed(item.date)}
+            >
+              <View style={styles.icon}>
+                <item.Icon />
+              </View>
+              <Text style={styles.listText}>
+                {new Date(item.date).toDateString().split(" ")[0]}
+              </Text>
+              <Text style={styles.listText}>Max temp: {item.actualMax} °C</Text>
+              <Text style={styles.listText}>Min temp: {item.actualMin} °C</Text>
+              {/* <Text>Feels like max: {item.feelsMax}</Text>
+                <Text>Feels like min: {item.feelsMin}</Text> */}
+              <Text style={styles.listText}>
+                Chance of precipitation: {item.rain}%
+              </Text>
+              <Text
+                style={{
+                  fontSize: 20,
+                  position: "absolute",
+                  top: 0,
+                  right: 10,
+                }}
+              >
+                {item.weatherDescription}
+              </Text>
+            </Pressable>
+          );
+        }}
+        keyExtractor={(item) => item.date}
+      />
+      <StatusBar style="auto" />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#fff",
+  },
+  modal: {
+    backgroundColor: "lightblue",
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalListItem: {
+    flex: 1,
+    flexDirection: "row",
+    borderWidth: 1,
+    borderColor: "red",
+    width: "100%",
+  },
+  title: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+  },
+  titleText: {
+    fontSize: 20,
+    padding: 5,
+  },
+  listText: {
+    fontSize: 20,
+  },
+
+  listItem: {
+    flex: 1,
+    backgroundColor: "lightblue",
+    alignItems: "flexStart",
+    justifyContent: "center",
+    width: "100%",
+    borderWidth: 1,
+  },
+  icon: {
+    position: "absolute",
+    top: 30,
+    right: 100,
+    width: "15%",
+    height: "45%",
+    backgroundColor: "blue",
+    paddingBottom: 10,
+    marginLeft: -10,
+    marginRight: "auto",
+    borderWidth: 1,
+    borderColor: "black",
+    borderRadius: 50,
+    overflow: "hidden",
+  },
+  details: {
+    flex: 0.25,
+    backgroundColor: "green",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+});

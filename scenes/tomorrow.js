@@ -24,7 +24,7 @@ export  const Tomorrow = () => {
     
         <View style={styles.container}>
           <View style={styles.date}>
-          <Text style={styles.dateText}>{new Date(tomorrow).toDateString()}</Text>
+          <Text style={styles.dateText}>Tomorrow {new Date(tomorrow).toDateString().slice(0,10)}</Text>
           </View>
             <HourlyScroll location={location} date={tomorrow}/>
         <StatusBar style="auto" />
@@ -34,31 +34,36 @@ export  const Tomorrow = () => {
     }
     
     const styles = StyleSheet.create({
-        container: {
-          flex: 1,
-          backgroundColor: '#fff',
-          alignItems: 'center',
-          justifyContent: 'center',
-        },
-        dateText:{
-    
-    padding:0,
-    margin:0,
-          height:40,
-          fontSize:20,
-          fontWeight:"bold",
-paddingTop:5,
-paddingBottom:"auto",
-          width:"100%",
- 
-        textAlign:"center",
-        alignContent:"center",
-          backgroundColor:"lightblue",
-          justifyContent:"center",
-          alignItems:"center",
-          borderWidth:1,
-          borderColor:"blue",
-        },  
-     
+      container: {
+        flex: 1,
+        backgroundColor: "#fff",
+        alignItems: "center",
+        justifyContent: "center",
+      },
+      date:{
+        backgroundColor:'lightgrey',
+        width:'100%',
+        borderTopRightRadius:20,
+        borderTopLeftRadius:20,
+        overflow:'hidden',
+        marginTop:5
+      },
+      dateText: {
+        padding: 0,
+        margin: 0,
+        height: 40,
+        fontSize: 20,
+        fontWeight: "bold",
+        paddingTop: 5,
+        paddingBottom: "auto",
+        width: "100%",
 
-      });
+        textAlign: "center",
+        alignContent: "center",
+        backgroundColor: "lightgrey",
+        justifyContent: "center",
+        alignItems: "center",
+    
+       
+      },
+    });

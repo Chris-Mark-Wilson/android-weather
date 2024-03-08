@@ -171,15 +171,21 @@ const styles = StyleSheet.create({
     height:30,
     textAlign:"center",
     fontSize:20,
-    borderWidth:1,
-    borderColor:"blue"
+  
+    borderBottomRightRadius:20,
+    borderBottomLeftRadius:20,
+    overflow:'hidden',
+    marginBottom:5,
+    
   },
   listItem: {
    
    flex:1,
     width: "100%",
-    borderWidth: 2,
-    borderColor: "orange",
+    // borderWidth: 2,
+    // borderColor: "orange",
+    borderRadius:20,
+    marginBottom:5
   },
   icon:{
     position:"absolute",

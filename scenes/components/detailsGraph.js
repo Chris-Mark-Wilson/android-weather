@@ -1,12 +1,13 @@
 import React, { useEffect,useState,useContext,useRef } from 'react';
 import { StyleSheet, Text, View,FlatList } from 'react-native';
-import { LocationContext } from '../../contexts/locationContext';
-import { IconContext } from '../../contexts/weatherContext';
+
+import { IconContext } from '../../contexts/iconContext';
 import { getHourlyWeather } from '../../open-meteo-api';
 import { getWeatherDescription } from '../../functions/getWeatherDescription';
 import { LinearGradient } from 'expo-linear-gradient';
 import {Canvas, Path} from "@shopify/react-native-skia";
-export const Details=({location})=> {
+
+export const Details=({location,date})=> {
 
   const [hourlyData,setHourlyData] = useState([]);
   const { iconMap,SVG } = useContext(IconContext);
@@ -23,31 +24,42 @@ const [windRange,setWindRange]=useState([]);
 
 useEffect(()=>{
 if(location!=null){
-  getHourlyWeather(location)
+  getHourlyWeather(location,date)
   .then((data)=>{
-   
+    let windRange,snowRange,precipRange,tempRange =0
+
+   console.log(data.hourly)
     //24 hours of data, 1 hour intervals
     //create ranges max-min for each data point
 
     let range=[0,0]
     
      range=[Math.min(...data.hourly.apparent_temperature),Math.max(...data.hourly.apparent_temperature)];
-     if(!tempRange===range) setTempRange(()=>range);
+     console.log(range,'tempRange')
+    //  if(!tempRange===range) setTempRange(()=>range);
+    if(tempRange!==range) tempRange=range
+
     const tempMultiplier=70/((Math.round(range[1]-range[0]))+1);
     console.log(tempMultiplier," -temp multiplier")
 
     range = [Math.min(...data.hourly.precipitation_probability),Math.max(...data.hourly.precipitation_probability)];
-    if(!precipRange===range) setPrecipRange(()=>range);
+    // if(!precipRange===range) setPrecipRange(()=>range);
+    if(precipRange!==range) precipRange=range
+
     const precipMultiplier=80/((Math.round(range[1]-range[0]))+1);
     console.log(precipMultiplier," -precip multiplier")
 
     range = [Math.min(...data.hourly.snowfall),Math.max(...data.hourly.snowfall)];
-    if(!snowRange===range) setSnowRange(()=>range);
+    // if(!snowRange===range) setSnowRange(()=>range);
+    if(snowRange!=range) snowRange=range
+
     const snowMultiplier=75/((Math.round(range[1]-range[0]))+1);
     console.log(snowMultiplier," -snow multiplier")
     
     range = [Math.min(...data.hourly.wind_speed_10m),Math.max(...data.hourly.wind_speed_10m)];
-    if(!windRange===range) setWindRange(()=>range);
+    // if(!windRange===range) setWindRange(()=>range);
+    if(windRange!==range) windRange=range
+
     const windMultiplier=60/((Math.round(range[1]-range[0]))+1);
     console.log(windMultiplier," -wind multiplier")
  
@@ -77,14 +89,19 @@ if(location!=null){
     };
     
   })
+  // console.log(newData,'newData')
+  setTempRange(()=>tempRange)
+  setPrecipRange(()=>precipRange)
+  setWindRange(()=>windRange)
+  setSnowRange(()=>snowRange)
   setHourlyData(newData);
   })
 
   .catch((error)=>{
-    console.log(error,"error in hourly weather");
+    console.log(error,"error in details graph");
   })
 }
-},[location,tempRange,precipRange,snowRange,windRange])
+},[location])
 
 useEffect(()=>{
   //get time now that matches time in hourlyData
@@ -136,7 +153,7 @@ useEffect(()=>{
                 <item.icon style={{opacity:1,position:"absolute",width:"100%",height:"100%"}}/>
 
               {/* cloud cover */}
-                {(item.weatherCode === "day_clear" ||
+                 {(item.weatherCode === "day_clear" ||
             item.weatherCode === "night_half_moon_clear") &&
               iconMap["overcast"]({
                 style: {
@@ -183,31 +200,35 @@ useEffect(()=>{
   const styles = StyleSheet.create({
 
     details: {
-     position:"absolute",
-      top:"75%",
-      height:"25%",
+    //  position:"absolute",
+    //   top:"75%",
+    //   height:"25%",
       flexDirection:"column",
     
       alignItems: "center",
    
       width: "100%",
     
-     
+      borderWidth:5,
+      borderColor:'orange'
     },
     listContainer: {
       // width: "100%",
-      height:"100%",
+      height:"50%",
       backgroundColor: 'lightgray',
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection:"row",
+      borderWidth:5,
+      borderColor:'red'
+
     
 
     },
     listItem:{
       flex:0,
-      // borderColor:"red",
-      // borderWidth:2,
+      borderColor:"green",
+      borderWidth:4,
       width:80,
       height:"100%",
       padding:0,
@@ -217,8 +238,8 @@ useEffect(()=>{
     time:{
     
       // backgroundColor:"white",
-      // borderColor:"blue",
-      // borderWidth:2,
+      borderColor:"white",
+      borderWidth:2,
       color:'white',
       width:80,
       height:20,
@@ -226,8 +247,8 @@ useEffect(()=>{
     },
     canvas:{
       flex:1,
-      // borderColor:"black",
-      // borderWidth:2,
+      borderColor:"purple",
+      borderWidth:2,
       width:80,
       height:100,
       
@@ -248,7 +269,8 @@ useEffect(()=>{
       
       textAlign:'center',
       width:"25%",
-      borderWidth:1
+      borderWidth:2,
+      borderColor:'green'
       
     }
   });
