@@ -126,13 +126,13 @@ export const HourlyScroll = ({ location,date }) => {
             </Text>
 
            <View style={styles.details}>
-            <SVG.rain_icon style={styles.smallIcon}/>
-            <Text style={styles.detailsText}> {item.precipitationProbability}% precipitation</Text>
+            <SVG.water_drop style={styles.smallIcon}/>
+            <Text style={styles.detailsText}> {item.precipitationProbability}% </Text>
            </View>
 
            <View style={styles.details}>
-            <SVG.water_drop style={styles.smallIcon}/>
-            <Text style={styles.detailsText}> {item.humidity}% humidity</Text>
+
+            <Text style={styles.detailsText}>RH {item.humidity}%</Text>
            </View>
 
            <View style={styles.details}>

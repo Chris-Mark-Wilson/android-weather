@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View, StatusBar } from "react-native";
+import { StyleSheet, Text, View, StatusBar,ActivityIndicator } from "react-native";
 import { Details } from "./components/detailsGraph";
 import { LocationFinder } from "./components/locationFinder";
 import { CurrentMain } from "./components/current_main";
-import { useContext,useEffect } from "react";
+import { useContext,useEffect,useState } from "react";
 import { LocationContext } from "../contexts/locationContext";
 import {getCurrentLocation} from "../functions/getCurrentLocation";
 import { HourlyScroll } from "./components/hourlyScroll";
@@ -10,10 +10,12 @@ import { HourlyScroll } from "./components/hourlyScroll";
 export const Current = () => {
 
   const {location,setLocation}=useContext(LocationContext);
+  const [isLoading,setIsLoading]=useState(true)
 
 useEffect(() => {
 
   if(!location.place){
+    setIsLoading(true)
   getCurrentLocation()
   .then((location)=>{
 
@@ -26,14 +28,22 @@ useEffect(() => {
     
   }
     )
+    setTimeout(()=>{setIsLoading(false)},2000)
   })
   .catch((error)=>{
     console.log(error,"error in get current location, locationFinder.js");
   })
 }
+else { setTimeout(()=>{setIsLoading(false)},2000)}
 },[location])
 
-  return (
+  return isLoading?
+  <View style={styles.container}>
+  <ActivityIndicator size="large" color={"green"}/>
+  <Text>{'Getting current location'}</Text>
+  </View>
+
+  :(
     <View style={styles.container}>
       <LocationFinder location={location} setLocation={setLocation}/>
     <View style={styles.hourlyScrollContainer}>
