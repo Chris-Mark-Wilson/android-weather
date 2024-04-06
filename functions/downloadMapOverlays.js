@@ -13,7 +13,8 @@ export const downloadMapOverlays = async (urlList) => {
                     // again using proxy to get round the http problem
                     //encodeURIComponent ensures the incoming url with its own query string is not truncated
                     // console.log(urlList[layerName].timesteps[timestep],"url in downloadMapOverlays")
-                const uri = await FileSystem.downloadAsync(`https://met-office-api-proxy.onrender.com/png?url=${encodeURIComponent(urlList[layerName].timesteps[timestep])}`,FileSystem.documentDirectory+`${layerName}_${timestep}.png`);
+                    //old proxy server url = https://met-office-api-proxy.onrender.com/png
+                const uri = await FileSystem.downloadAsync(`https://cmwebserver.ddns.net/metserver.php/png?meturl=${encodeURIComponent(urlList[layerName].timesteps[timestep])}`,FileSystem.documentDirectory+`${layerName}_${timestep}.png`);
                 uriList[layerName][timestep]=uri.uri;
                 }
                 catch(error){
