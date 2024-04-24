@@ -1,6 +1,6 @@
 import { MET_API } from "@env";
 
-import { getCapabilities } from "../met-office-api.js";
+import { getCapabilities } from "./getCapabilities.js";
 
 export const getMapOverlayUrls = async () => {
   try {

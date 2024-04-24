@@ -1,7 +1,21 @@
 import * as FileSystem from "expo-file-system";
+import * as Network from 'expo-network';
 
 
 export const downloadMapOverlays = async (urlList) => {
+   //set server dependent on my location, i.e. if I am connected to my local network, use the render server else use the apache2 server
+    let server="https://cmwebserver.ddns.net/metserver.php/png";
+    try{
+        const ipAddress=  await Network.getIpAddressAsync()
+        console.log(ipAddress,"ip address in downloadMapOverlays");
+        if(ipAddress.slice(0,3)==="192") server="https://met-office-api-proxy.onrender.com/png" // if at home use local server
+    }
+    catch(error){
+        console.log(error,"error getting ip address");
+        return Promise.reject(`${error} error getting ipaddress from downloadMapOverlays`);
+    }
+
+
 
     // iterate over urlList object, download each image and save to file system
 
@@ -14,7 +28,7 @@ export const downloadMapOverlays = async (urlList) => {
                     //encodeURIComponent ensures the incoming url with its own query string is not truncated
                     // console.log(urlList[layerName].timesteps[timestep],"url in downloadMapOverlays")
                     //old proxy server url = https://met-office-api-proxy.onrender.com/png
-                const uri = await FileSystem.downloadAsync(`https://cmwebserver.ddns.net/metserver.php/png?meturl=${encodeURIComponent(urlList[layerName].timesteps[timestep])}`,FileSystem.documentDirectory+`${layerName}_${timestep}.png`);
+                const uri = await FileSystem.downloadAsync(`${server}?meturl=${encodeURIComponent(urlList[layerName].timesteps[timestep])}`,FileSystem.documentDirectory+`${layerName}_${timestep}.png`);
                 uriList[layerName][timestep]=uri.uri;
                 }
                 catch(error){

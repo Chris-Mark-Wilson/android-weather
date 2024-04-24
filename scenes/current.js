@@ -6,13 +6,24 @@ import { useContext,useEffect,useState } from "react";
 import { LocationContext } from "../contexts/locationContext";
 import {getCurrentLocation} from "../functions/getCurrentLocation";
 import { HourlyScroll } from "./components/hourlyScroll";
+import * as Network from 'expo-network';
 
 export const Current = () => {
 
   const {location,setLocation}=useContext(LocationContext);
   const [isLoading,setIsLoading]=useState(true)
+  
+  useEffect(()=>{
+    const getIpAddress=async()=>{
+    const ipAddress=  await Network.getIpAddressAsync()
+    alert(ipAddress)
+    }
+    getIpAddress()
+  },[])
 
 useEffect(() => {
+
+  
 
   if(!location.place){
     setIsLoading(true)
@@ -34,7 +45,7 @@ useEffect(() => {
     console.log(error,"error in get current location, locationFinder.js");
   })
 }
-else { setTimeout(()=>{setIsLoading(false)},2000)}
+else { setTimeout(()=>{setIsLoading(false)},1000)}
 },[location])
 
   return isLoading?
