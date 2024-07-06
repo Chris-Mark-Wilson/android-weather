@@ -12,7 +12,7 @@ export const getCapabilities = async () => {
     const url=`${MET_URL}${resource}${key}`;
    
      //set server dependent on my location, i.e. if I am connected to my local network, use the render server else use the apache2 server
-    let server="https://cmwebserver.ddns.net/metserver/capabilities";
+    let server="https://cmwebserver.ddns.net/metserver/capabilities.php";
     try{
         const ipAddress=  await Network.getIpAddressAsync()
         console.log(ipAddress,"ip address in getCapabilities");

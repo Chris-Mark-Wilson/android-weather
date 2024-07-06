@@ -12,14 +12,14 @@ export const Current = () => {
 
   const {location,setLocation}=useContext(LocationContext);
   const [isLoading,setIsLoading]=useState(true)
-  
-  useEffect(()=>{
-    const getIpAddress=async()=>{
-    const ipAddress=  await Network.getIpAddressAsync()
-    alert(ipAddress)
-    }
-    getIpAddress()
-  },[])
+//display ip address for test purposes  
+  // useEffect(()=>{
+  //   const getIpAddress=async()=>{
+  //   const ipAddress=  await Network.getIpAddressAsync()
+  //   alert(ipAddress)
+  //   }
+  //   getIpAddress()
+  // },[])
 
 useEffect(() => {
 
