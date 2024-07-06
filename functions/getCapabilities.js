@@ -12,12 +12,12 @@ export const getCapabilities = async () => {
     const url=`${MET_URL}${resource}${key}`;
    
      //set server dependent on my location, i.e. if I am connected to my local network, use the render server else use the apache2 server
-    let server="https://cmwebserver.ddns.net/metserver.php/capabilities";
+    let server="https://cmwebserver.ddns.net/metserver/capabilities";
     try{
         const ipAddress=  await Network.getIpAddressAsync()
         console.log(ipAddress,"ip address in getCapabilities");
         console.log(ipAddress.slice(0,3),"ip address in getCapabilities")
-        if (ipAddress.slice(0,3)==="192") server="https://met-office-api-proxy.onrender.com/proxy" // if at home use local server
+        if (ipAddress.slice(0,3)==="192") server="https://met-api-proxy-server.onrender.com/proxy" // if at home use render server
     }
     catch (error){
         console.log(error,"error getting ip address");
