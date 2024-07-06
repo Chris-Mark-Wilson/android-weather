@@ -19,7 +19,7 @@ Built using [EAS Build](https://docs.expo.dev/build/introduction/)
 
 clone repo,
 ``````
-git clone https://github.com/Chris-Mark-Wilson/trackme.git
+git clone https://github.com/Chris-Mark-Wilson/android-weather.git
 npm install
 ``````
 
