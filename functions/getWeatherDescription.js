@@ -110,6 +110,6 @@ export const getWeatherDescription = (weatherCode,isDay) => {
         }
       }
     }
-
+// console.log(lookup[weatherCode.toString().padStart(2,"0")])
     return lookup[weatherCode.toString().padStart(2,"0")];
 }

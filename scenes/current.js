@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View, StatusBar,ActivityIndicator } from "react-native";
-import { Details } from "./components/detailsGraph";
+
 import { LocationFinder } from "./components/locationFinder";
-import { CurrentMain } from "./components/current_main";
+
 import { useContext,useEffect,useState } from "react";
 import { LocationContext } from "../contexts/locationContext";
 import {getCurrentLocation} from "../functions/getCurrentLocation";
 import { HourlyScroll } from "./components/hourlyScroll";
-import * as Network from 'expo-network';
+
 
 export const Current = () => {
 
@@ -21,32 +21,39 @@ export const Current = () => {
   //   getIpAddress()
   // },[])
 
-useEffect(() => {
-
+  useEffect(() => {
+    //setInterval introduced to 'kick server till it bloody works' - 1 second interval
+    let intervalId;
   
-
-  if(!location.place){
-    setIsLoading(true)
-  getCurrentLocation()
-  .then((location)=>{
-
-    setLocation((old)=>{
-      const newLoc={...old}
-      newLoc.lat=location.coords.latitude,
-     newLoc.lon=location.coords.longitude,
-      newLoc.place="Current location"
-      return newLoc;
-    
-  }
-    )
-    setTimeout(()=>{setIsLoading(false)},2000)
-  })
-  .catch((error)=>{
-    console.log(error,"error in get current location, locationFinder.js");
-  })
-}
-else { setTimeout(()=>{setIsLoading(false)},1000)}
-},[location])
+    if (!location.place) {
+      setIsLoading(true);
+      const getLocation = async () => {
+        try {
+          const location = await getCurrentLocation();
+          setLocation((old) => {
+            const newLoc = { ...old };
+            newLoc.lat = location.coords.latitude;
+            newLoc.lon = location.coords.longitude;
+            newLoc.place = "Current location";
+            return newLoc;
+          });
+          setIsLoading(false);
+          clearInterval(intervalId); // Clear the interval once location is obtained
+        } catch (error) {
+          console.log('error getting location', error);
+        }
+      };
+  
+      intervalId = setInterval(getLocation, 1000);
+    } else {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+    }
+  
+    // Cleanup function to clear the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, [location.place]);
 
   return isLoading?
   <View style={styles.container}>

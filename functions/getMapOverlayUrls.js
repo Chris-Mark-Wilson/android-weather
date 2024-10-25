@@ -6,7 +6,7 @@ export const getMapOverlayUrls = async () => {
   try {
     //get capability data from met office api
     const data = await getCapabilities();
-    console.log(data);
+    // console.log(data);
     const urlList = {};
     const base_url = data.Layers.BaseUrl.$;
     const layers = data.Layers.Layer;

@@ -14,7 +14,8 @@ import { LocationContext } from "../contexts/locationContext";
 import { IconContext } from "../contexts/iconContext";
 import { getWeatherDescription } from "../functions/getWeatherDescription";
 import {FontAwesome5} from '@expo/vector-icons'
-import { Details } from "./components/detailsGraph";
+
+import { Image } from "expo-image";
 
 export const SevenDays = () => {
   const [sevenDayForecast, setSevenDayForecast] = useState([]);
@@ -26,15 +27,17 @@ export const SevenDays = () => {
   const { iconMap } = useContext(IconContext);
 
   useEffect(() => {
- 
+//  console.log(iconMap,"iconMap in 7days")
     if (location.place) {
       getSevenDayForecast(location)
         .then((response) => {
+          console.log('response in 7day')
           const data = response.daily;
+
           const maxTemp = [...data.apparent_temperature_max];
           const newSevenDayForecast = maxTemp.map((appTempMax, index) => {
             return {
-              Icon: iconMap[
+              image: iconMap[
                 getWeatherDescription(data.weather_code[index], true)[0]
               ],
               feelsMax: appTempMax,
@@ -49,12 +52,16 @@ export const SevenDays = () => {
               )[0],
             };
           });
-          setSevenDayForecast(() => [...newSevenDayForecast]);
+         return newSevenDayForecast;
           //{"apparent_temperature_max": [7.4, 7.2, 8.4, 7.5, 6.3, 6.5, 6.8], "apparent_temperature_min": [-4.5, 0.8, -3.4, -1.3, 0.3, 0, 0.8], "precipitation_probability_max": [30, 42, 16, 13, 7, 39, 32], "temperature_2m_max": [10.6, 10.3, 11.5, 11.1, 10, 10.4, 10.5], "temperature_2m_min": [-1.6, 3.1, -1, 1.1, 3.3, 3, 3.7], "time": ["2024-03-04", "2024-03-05", "2024-03-06", "2024-03-07", "2024-03-08", "2024-03-09", "2024-03-10"], "weather_code": [45, 61, 45, 45, 3, 3, 3]}
+        })
+        .then((forecast) => {
+          console.log('got forecast')
+          setSevenDayForecast(() => [...forecast]);
         })
 
         .catch((error) => {
-          console.log(error);
+          console.log('error in 7days effect',error);
         });
     }
   }, [location]);
@@ -72,7 +79,7 @@ export const SevenDays = () => {
         rain:data.precipitation_probability[index],
         isDay:data.is_day[index],
         //capital Icon because its an SVG
-        Icon: iconMap[
+        image: iconMap[
           getWeatherDescription(
             data.weather_code[index],
             data.is_day[index]
@@ -163,7 +170,7 @@ export const SevenDays = () => {
              
                  
                 
-                  <item.Icon style={{position:'absolute',left:100}}/>
+                  
                 </Pressable>
               
                     
@@ -183,9 +190,9 @@ export const SevenDays = () => {
               style={styles.listItem}
               onPress={() => handlePressed(item.date)}
             >
-              <View style={styles.icon}>
-                <item.Icon />
-              </View>
+            
+                <Image source={item.image} style={{position:'absolute',left:200,top:20,height:'60%',width:'20%',opacity:0.8}}/>
+             
               <Text style={styles.listText}>
                 {new Date(item.date).toDateString().split(" ")[0]}
               </Text>
@@ -276,14 +283,14 @@ const styles = StyleSheet.create({
     right: 100,
     width: "15%",
     height: "45%",
-    backgroundColor: "blue",
+   
     paddingBottom: 10,
     marginLeft: -10,
     marginRight: "auto",
     borderWidth: 1,
     borderColor: "black",
     borderRadius: 50,
-    overflow: "hidden",
+ 
   },
   details: {
     flex: 0.25,

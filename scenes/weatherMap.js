@@ -18,11 +18,10 @@ import { API_KEY } from "@env"
 
 
 
-
  export const WeatherMap=()=>{
    const {location}=useContext(LocationContext);
    const mapUrl=`https://maps.googleapis.com/maps/api/staticmap?center=54.5,-3.5&markers=color:red|size:small|${location.lat},${location.lon}&scale=1&zoom=2&size=400x400&maptype=terrain&key=${API_KEY}`
-  const [staticMapUrl,setStaticMapUrl]=useState("");
+  const [staticMapUrl,setStaticMapUrl]=useState(`https://maps.googleapis.com/maps/api/staticmap?center=54.5,-3.5&markers=color:red|size:small|${location.lat},${location.lon}&scale=1&zoom=2&size=400x400&maptype=terrain&key=${API_KEY}`);
   const mapRef=useRef(null)
 
   const [isUK,setIsUK]=useState(false);
@@ -46,7 +45,7 @@ import { API_KEY } from "@env"
  
     useEffect(() => {
       if (location.lat && location.lon) { 
-        setStaticMapUrl(`https://maps.googleapis.com/maps/api/staticmap?center=54.5,-3.5&markers=color:red|size:small|${location.lat},${location.lon}&scale=1&zoom=5&size=400x400&maptype=terrain&key=${API_KEY}`)
+        setStaticMapUrl(`https://maps.googleapis.com/maps/api/staticmap?center=54.5,-3.5&markers=color:red|size:small|${location.lat},${location.lon}&scale=1&zoom=5&&color=red&size=400x400&maptype=terrain&key=${API_KEY}`)
         // console.log(location.lat,"location lat in weather map")
         if (location.lat > 48 && location.lat < 61 && location.lon > -12 && location.lon < 5) {
           setIsUK(true);
@@ -150,13 +149,17 @@ mapRef.current.setMapBoundaries({latitude: 48, longitude: -12}, {latitude: 61, l
   
     // console.log(layout.height,"layout height in weather map")
 
-    return isLoading?
-    <View style={styles.container}>
+    
+    return (
+      <View style={{flex:1}}>
+
+    {isLoading && <View style={styles.trans}>
     <ActivityIndicator size="large" color={gotList?"green":'red'}/>
     <Text>{gotList?'Loading Radar Data...':'Contacting Met Office Server'}</Text>
-    </View>:
-    (
-        <View style={{flex:1}}>
+    </View>
+    }
+  
+    
 {/* <MapView style={styles.mapview}
 
 
@@ -171,10 +174,11 @@ initialRegion={{
 
 {/* overlays */}
         {!isUK&&<Text>Not in uk no radar data available</Text>}
-           {isRain&&!isCloud&&<Image style={{...styles.images}} source={{uri:uriList.Rainfall[offsetHours]}}/>}
+           {isRain&&!isCloud&&!isLoading&&<Image style={{...styles.images}} source={{uri:uriList.Rainfall[offsetHours]}}/>}
             {isCloud&&!isRain&&<Image style={{...styles.images}} source={{uri:uriList.Cloud[offsetHours]}}/>}
             {isCloud&&isRain&&<Image style={{...styles.images}} source={{uri:uriList.CloudAndRain[offsetHours]}}/>}
-           {isTemp&&<Image style={{...styles.images}} source={{uri:uriList.Temperature[offsetHours]}}/>} 
+           {isTemp&&<Image style={{...styles.images,opacity:0.7}} source={{uri:uriList.Temperature[offsetHours]}}/>} 
+
            <Image style={{...styles.map}} source={{uri:staticMapUrl}}/>
            
            <Text style={styles.time}> {displayTime!='invalid date'?displayTime:'setting time'} </Text>
@@ -225,7 +229,7 @@ initialRegion={{
 const styles = StyleSheet.create({
     container:{
       flex:1,
-        backgroundColor:"lightblue",
+        backgroundColor:"skyblue",
         alignItems:"center",
         justifyContent:"center",
       
@@ -245,27 +249,34 @@ const styles = StyleSheet.create({
     map:{
       resizeMode:"contain",
       position:"absolute",
+      top:-150,
+      left:-40,
       zIndex:-1,
-      height:"100%",
-  width:"100%"
+      height:"140%",
+  width:"140%",
+  backgroundColor:"skyblue",
       
     },
     images:{
-      // objectFit:"scale-down",
+      // transform:[{rotateY:"-30deg"}],
+      // objectFit:"contain",
+      aspectRatio:1,
       position:"absolute",
       opacity:0.5,
       zIndex:2,
-       width:"100%",
-       top:"25%",
-       height:"50%",
+      //  width:"100%",
+       left:-120,
+       top:-20,
+       height:"95%",
         borderWidth:1,
         borderColor:"red",
-        paddingLeft:30,
+        paddingLeft:60,
         paddingRight:"15",
         paddingBottom:30,
         // marginLeft:"15%",
         // marginRight:"15%",
-        marginBottom:"10%"
+        marginBottom:"10%",
+        // backgroundColor:'skyblue'
     },
     cloudIcon:{
       zIndex:999,
@@ -333,5 +344,17 @@ const styles = StyleSheet.create({
       width:"70%",
       height:"7%",
       zIndex:999,
+    },
+    trans:{
+      borderRadius:20,
+      opacity:0.8,
+      position:"absolute",
+      top:200,
+      left:75,
+      width:"70%",
+      height:"20%",
+      backgroundColor:"white",
+      zIndex:999,
+      padding:20,
     }
 })

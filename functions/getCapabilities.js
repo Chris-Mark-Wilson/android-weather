@@ -15,8 +15,8 @@ export const getCapabilities = async () => {
     let server="https://cmwebserver.ddns.net/metserver/capabilities.php";
     try{
         const ipAddress=  await Network.getIpAddressAsync()
-        console.log(ipAddress,"ip address in getCapabilities");
-        console.log(ipAddress.slice(0,3),"ip address in getCapabilities")
+        // console.log(ipAddress,"ip address in getCapabilities");
+        // console.log(ipAddress.slice(0,3),"ip address in getCapabilities")
         if (ipAddress.slice(0,3)==="192") server="https://met-api-proxy-server.onrender.com/proxy" // if at home use render server
     }
     catch (error){
@@ -26,12 +26,12 @@ export const getCapabilities = async () => {
 
 
             try{
-        console.log(url,'url in getCapabilities')
+        // console.log(url,'url in getCapabilities')
         //use proxy server to get around http met url issue
      
         //old proxy server url = https://met-office-api-proxy.onrender.com/proxy
     const response = await axios.get(`${server}?meturl=${url}`);
-    console.log(response,'response in getCapabilities')
+    // console.log(response,'response in getCapabilities')
     // alert(`${url},${JSON.stringify(response.data,null,1)}`)
     // console.log(JSON.stringify(response.data,null,1),"response data in weather map api")
     return response.data;

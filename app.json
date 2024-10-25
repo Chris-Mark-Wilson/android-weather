@@ -1,5 +1,14 @@
 {
   "expo": {
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow android weather to use your location."
+        }
+      ],
+      "expo-asset"
+    ],
     "name": "android-weather",
     "slug": "android-weather",
     "version": "1.0.0",

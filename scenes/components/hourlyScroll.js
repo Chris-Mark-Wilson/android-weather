@@ -4,25 +4,26 @@ import { getWeatherDescription } from "../../functions/getWeatherDescription";
 import { useState, useEffect, useRef,useContext } from "react";
 import { getHourlyWeather } from "../../open-meteo-api";
 import { IconContext } from "../../contexts/iconContext";
+import { Image } from "expo-image";
 
 
 
 export const HourlyScroll = ({ location,date }) => {
   const [hourlyData, setHourlyData] = useState([]);
   const flatListRef = useRef(null);
-  const { iconMap, SVG } = useContext(IconContext);
+  const {iconMap} = useContext(IconContext);
 
   useEffect(() => {
     // console.log(location,"in hourly scroll effect");
 
     if (location.place) {
-       
+       console.log('got location.place in hourlyScroll',location.place)
       getHourlyWeather(location,date)
         .then((data) => {
         
           const { hourly } = data;
        
-        //   console.log(JSON.stringify(hourly, null, 2), "hourly data");
+          // console.log(JSON.stringify(hourly, null, 2), "hourly data");
 
           const newData = hourly.time.map((time, index) => {
             
@@ -30,7 +31,14 @@ export const HourlyScroll = ({ location,date }) => {
               time: new Date(time).toLocaleTimeString("en-US", {
                 hour: "numeric",
               }),
-              Icon: iconMap[
+              //herein lies the issue with the SVGs getting a number
+              // Icon: iconMap[
+              //   getWeatherDescription(
+              //     hourly.weather_code[index],
+              //     hourly.is_day[index]
+              //   )[0]
+              // ],
+              image: iconMap[
                 getWeatherDescription(
                   hourly.weather_code[index],
                   hourly.is_day[index]
@@ -61,9 +69,12 @@ export const HourlyScroll = ({ location,date }) => {
 
 
           
-            setHourlyData(newData);
+      return newData;
       
-      
+        })
+        .then((data) => {
+          // console.log(data,"data");
+          setHourlyData([...data]);
         })
         .catch((e) => console.log(e, "error in hourly scroll catch"));
     }
@@ -82,6 +93,7 @@ export const HourlyScroll = ({ location,date }) => {
   }, [hourlyData])
 
   return (
+     hourlyData.length > 0 &&
       <View style={styles.container}>
       {location.place &&
         <Text style={{...styles.place,backgroundColor:"lightgray"}}>{location.place}</Text>
@@ -107,8 +119,8 @@ export const HourlyScroll = ({ location,date }) => {
             style={styles.listItem}
             colors={item.isDay === 1 ? ["blue", "skyblue"] : ["black", "grey"]}
           >
-              <item.Icon style={styles.icon}/>
-                <SVG.overcast style={{...styles.icon,width:`${(item.cloudCover/100)*40}%`,opacity:0.7}}/>
+            <Image source={item.image} style={styles.icon} />
+            
             <Text style={styles.time}>
               {item.time}
             </Text>
@@ -125,20 +137,19 @@ export const HourlyScroll = ({ location,date }) => {
                 Feels like {item.feelsLike}°C
             </Text>
 
-           <View style={styles.details}>
-            <SVG.water_drop style={styles.smallIcon}/>
-            <Text style={styles.detailsText}> {item.precipitationProbability}% </Text>
-           </View>
+       
+           <Text style={styles.detailsText}>  Cloud Cover {item.cloudCover}%</Text>
+            <Text style={styles.detailsText}>  Chance of Rain {item.precipitationProbability}% </Text>
+        
 
            <View style={styles.details}>
 
-            <Text style={styles.detailsText}>RH {item.humidity}%</Text>
+            <Text style={styles.detailsText}>Humidity {item.humidity}%</Text>
            </View>
 
-           <View style={styles.details}>
-            <SVG.wind_icon style={styles.smallIcon}/>
-            <Text style={styles.detailsText}> {item.wind}mph</Text>
-           </View>
+          
+            <Text style={styles.detailsText}> Wind speed {item.wind}mph</Text>
+          
       
             
         
@@ -147,6 +158,7 @@ export const HourlyScroll = ({ location,date }) => {
         )}
       />
     </View>
+      
   );
 };
 const styles = StyleSheet.create({
@@ -163,6 +175,7 @@ const styles = StyleSheet.create({
     flex:1,
     width:"100%",
     height:"100%",
+   
     backgroundColor:"white"
   },
   
@@ -185,17 +198,18 @@ const styles = StyleSheet.create({
     // borderWidth: 2,
     // borderColor: "orange",
     borderRadius:20,
+    padding:10,
     marginBottom:5
   },
   icon:{
     position:"absolute",
     top:10,
     right:5,
-    width:"40%",
-    height:"100%",
+    opacity:1,
+    width:"50%",
+    height:"50%",
     padding:0,
-    marginLeft:"auto",
-    marginRight:"auto"
+  
   },
   time: {
     left: 10,

@@ -4,7 +4,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import{API_KEY} from '@env'
 
 
-export const LocationFinder = ({ ocation, setLocation }) => {
+export const LocationFinder = ({ setLocation }) => {
   function setNewLocation(details) {
     // on select from dropdown
     // console.log(JSON.stringify(details,null,"  "),"location details in locationFinder.js")

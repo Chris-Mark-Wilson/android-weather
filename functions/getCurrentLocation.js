@@ -5,7 +5,7 @@ import * as Location from 'expo-location';
 
 export const getCurrentLocation= async()=> {
 
-// console.log("in getcurrentlocation")
+console.log("in getcurrentlocation")
   
 
     try{
@@ -15,10 +15,10 @@ export const getCurrentLocation= async()=> {
 
         return Promise.reject('Permission to access location was denied');
       }
-
+console.log('getting location')
     
       let location = await Location.getCurrentPositionAsync();
- 
+ console.log('got location',location)
       return location;
     }
     catch (error){
